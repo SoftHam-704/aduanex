@@ -16,16 +16,10 @@ import {
   ChevronRight,
   Menu,
   X,
-  Anchor,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 
 interface NavItem {
   label: string;
@@ -42,8 +36,8 @@ const navItems: NavItem[] = [
     label: "Documentos Aduaneiros",
     icon: FileText,
     children: [
-      { label: "DI - Declaração Importação", href: "/documentos/di" },
-      { label: "DU-E - Declaração Exportação", href: "/documentos/due" },
+      { label: "DI", href: "/documentos/di" },
+      { label: "DU-E", href: "/documentos/due" },
       { label: "DUIMP", href: "/documentos/duimp" },
     ],
   },
@@ -90,23 +84,20 @@ export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: Side
     <div className="flex flex-col h-full">
       {/* Logo */}
       <div className={cn(
-        "flex items-center gap-3 px-4 py-5 border-b border-sidebar-border",
+        "flex items-center gap-3 px-4 h-14 border-b border-sidebar-border",
         collapsed && "justify-center px-2"
       )}>
-        <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-tech-blue to-tech-blue-dark shadow-lg">
-          <Anchor className="w-5 h-5 text-white" />
+        <div className="flex items-center justify-center w-8 h-8 rounded bg-primary text-primary-foreground">
+          <span className="text-sm font-semibold">A</span>
         </div>
         {!collapsed && (
-          <div className="flex flex-col">
-            <span className="font-bold text-lg tracking-tight text-foreground">ADUANEX</span>
-            <span className="text-[10px] text-muted-foreground tracking-wider uppercase">Sistema Aduaneiro</span>
-          </div>
+          <span className="font-semibold text-sm tracking-tight text-foreground">ADUANEX</span>
         )}
       </div>
 
       {/* Navigation */}
-      <ScrollArea className="flex-1 py-4">
-        <nav className="space-y-1 px-2">
+      <ScrollArea className="flex-1 py-2">
+        <nav className="px-2 space-y-0.5">
           {navItems.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.href, item.children);
@@ -115,48 +106,39 @@ export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: Side
             if (item.children) {
               return (
                 <div key={item.label}>
-                  <Tooltip delayDuration={0}>
-                    <TooltipTrigger asChild>
-                      <button
-                        onClick={() => !collapsed && toggleExpanded(item.label)}
-                        className={cn(
-                          "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200",
-                          active
-                            ? "bg-primary/10 text-primary"
-                            : "text-muted-foreground hover:bg-accent hover:text-foreground",
-                          collapsed && "justify-center px-2"
-                        )}
-                      >
-                        <Icon className={cn("w-5 h-5 flex-shrink-0", active && "text-primary")} />
-                        {!collapsed && (
-                          <>
-                            <span className="flex-1 text-left">{item.label}</span>
-                            {expanded ? (
-                              <ChevronDown className="w-4 h-4" />
-                            ) : (
-                              <ChevronRight className="w-4 h-4" />
-                            )}
-                          </>
-                        )}
-                      </button>
-                    </TooltipTrigger>
-                    {collapsed && (
-                      <TooltipContent side="right" className="font-medium">
-                        {item.label}
-                      </TooltipContent>
+                  <button
+                    onClick={() => !collapsed && toggleExpanded(item.label)}
+                    className={cn(
+                      "w-full flex items-center gap-2.5 px-2.5 py-2 rounded text-sm transition-colors",
+                      active
+                        ? "text-primary bg-primary/5"
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted",
+                      collapsed && "justify-center px-2"
                     )}
-                  </Tooltip>
+                  >
+                    <Icon className="w-4 h-4 flex-shrink-0" />
+                    {!collapsed && (
+                      <>
+                        <span className="flex-1 text-left truncate">{item.label}</span>
+                        {expanded ? (
+                          <ChevronDown className="w-3.5 h-3.5 text-muted-foreground" />
+                        ) : (
+                          <ChevronRight className="w-3.5 h-3.5 text-muted-foreground" />
+                        )}
+                      </>
+                    )}
+                  </button>
 
                   {!collapsed && expanded && (
-                    <div className="mt-1 ml-4 pl-4 border-l-2 border-border space-y-1">
+                    <div className="mt-0.5 ml-4 pl-2.5 border-l border-border space-y-0.5">
                       {item.children.map((child) => (
                         <Link key={child.href} href={child.href}>
                           <span
                             className={cn(
-                              "block px-3 py-2 rounded-lg text-sm transition-all duration-200 cursor-pointer",
+                              "block px-2.5 py-1.5 rounded text-sm transition-colors cursor-pointer",
                               location === child.href
-                                ? "bg-primary/10 text-primary font-medium"
-                                : "text-muted-foreground hover:bg-accent hover:text-foreground"
+                                ? "text-primary bg-primary/5 font-medium"
+                                : "text-muted-foreground hover:text-foreground hover:bg-muted"
                             )}
                           >
                             {child.label}
@@ -170,44 +152,35 @@ export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: Side
             }
 
             return (
-              <Tooltip key={item.label} delayDuration={0}>
-                <TooltipTrigger asChild>
-                  <Link href={item.href || "/"}>
-                    <span
-                      className={cn(
-                        "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer",
-                        active
-                          ? "bg-primary/10 text-primary"
-                          : "text-muted-foreground hover:bg-accent hover:text-foreground",
-                        collapsed && "justify-center px-2"
-                      )}
-                    >
-                      <Icon className={cn("w-5 h-5 flex-shrink-0", active && "text-primary")} />
-                      {!collapsed && <span>{item.label}</span>}
-                    </span>
-                  </Link>
-                </TooltipTrigger>
-                {collapsed && (
-                  <TooltipContent side="right" className="font-medium">
-                    {item.label}
-                  </TooltipContent>
-                )}
-              </Tooltip>
+              <Link key={item.label} href={item.href || "/"}>
+                <span
+                  className={cn(
+                    "flex items-center gap-2.5 px-2.5 py-2 rounded text-sm transition-colors cursor-pointer",
+                    active
+                      ? "text-primary bg-primary/5 font-medium"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted",
+                    collapsed && "justify-center px-2"
+                  )}
+                >
+                  <Icon className="w-4 h-4 flex-shrink-0" />
+                  {!collapsed && <span className="truncate">{item.label}</span>}
+                </span>
+              </Link>
             );
           })}
         </nav>
       </ScrollArea>
 
       {/* Collapse toggle (desktop only) */}
-      <div className="hidden lg:flex border-t border-sidebar-border p-3">
+      <div className="hidden lg:flex border-t border-sidebar-border p-2">
         <Button
           variant="ghost"
           size="sm"
           onClick={onToggle}
-          className={cn("w-full justify-center", collapsed && "px-2")}
+          className={cn("w-full justify-center text-muted-foreground", collapsed && "px-2")}
         >
           <Menu className="w-4 h-4" />
-          {!collapsed && <span className="ml-2">Recolher menu</span>}
+          {!collapsed && <span className="ml-2 text-xs">Recolher</span>}
         </Button>
       </div>
     </div>
@@ -218,7 +191,7 @@ export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: Side
       {/* Mobile overlay */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          className="fixed inset-0 bg-black/40 z-40 lg:hidden"
           onClick={onMobileClose}
         />
       )}
@@ -226,17 +199,17 @@ export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: Side
       {/* Mobile sidebar */}
       <aside
         className={cn(
-          "fixed top-0 left-0 z-50 h-full w-72 bg-sidebar border-r border-sidebar-border transform transition-transform duration-300 lg:hidden",
+          "fixed top-0 left-0 z-50 h-full w-64 bg-sidebar border-r border-sidebar-border transform transition-transform duration-200 lg:hidden",
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
         <Button
           variant="ghost"
-          size="icon"
-          className="absolute top-4 right-4"
+          size="icon-sm"
+          className="absolute top-3 right-3 text-muted-foreground"
           onClick={onMobileClose}
         >
-          <X className="w-5 h-5" />
+          <X className="w-4 h-4" />
         </Button>
         <NavContent />
       </aside>
@@ -244,8 +217,8 @@ export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: Side
       {/* Desktop sidebar */}
       <aside
         className={cn(
-          "hidden lg:flex flex-col h-screen bg-sidebar border-r border-sidebar-border transition-all duration-300",
-          collapsed ? "w-16" : "w-64"
+          "hidden lg:flex flex-col h-screen bg-sidebar border-r border-sidebar-border transition-all duration-200",
+          collapsed ? "w-14" : "w-56"
         )}
       >
         <NavContent />

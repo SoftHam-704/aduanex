@@ -1,18 +1,13 @@
 import { useState } from "react";
 import {
-  BarChart3,
   Download,
-  Calendar,
   FileText,
-  DollarSign,
-  Ship,
-  Plane,
+  Calendar,
   TrendingUp,
-  Filter,
+  BarChart3,
 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectContent,
@@ -34,359 +29,215 @@ import {
   CartesianGrid,
   LineChart,
   Line,
-  PieChart,
-  Pie,
-  Cell,
-  AreaChart,
-  Area,
 } from "recharts";
 
 const monthlyData = [
-  { month: "Jan", importacao: 42, exportacao: 28, valor: 1250000 },
-  { month: "Fev", importacao: 38, exportacao: 32, valor: 1180000 },
-  { month: "Mar", importacao: 45, exportacao: 35, valor: 1420000 },
-  { month: "Abr", importacao: 52, exportacao: 30, valor: 1350000 },
-  { month: "Mai", importacao: 48, exportacao: 38, valor: 1520000 },
-  { month: "Jun", importacao: 55, exportacao: 42, valor: 1680000 },
+  { month: "Jan", importacao: 42, exportacao: 28 },
+  { month: "Fev", importacao: 38, exportacao: 32 },
+  { month: "Mar", importacao: 45, exportacao: 35 },
+  { month: "Abr", importacao: 52, exportacao: 30 },
+  { month: "Mai", importacao: 48, exportacao: 38 },
+  { month: "Jun", importacao: 55, exportacao: 42 },
 ];
 
-const countryData = [
-  { name: "China", value: 45, color: "#0066FF" },
-  { name: "EUA", value: 20, color: "#00D68F" },
-  { name: "Alemanha", value: 15, color: "#FF6B35" },
-  { name: "Japão", value: 12, color: "#6E56CF" },
-  { name: "Outros", value: 8, color: "#00B8D9" },
-];
-
-const statusData = [
-  { status: "Desembaraçado", quantidade: 145, percentual: 58 },
-  { status: "Em Análise", quantidade: 52, percentual: 21 },
-  { status: "Trânsito", quantidade: 35, percentual: 14 },
-  { status: "Exigência", quantidade: 18, percentual: 7 },
-];
-
-const reportTemplates = [
-  {
-    id: 1,
-    title: "Relatório Mensal de Operações",
-    description: "Consolidado de todas as operações do mês",
-    type: "mensal",
-    icon: Calendar,
-  },
-  {
-    id: 2,
-    title: "Relatório de Tributos",
-    description: "Detalhamento de impostos por operação",
-    type: "fiscal",
-    icon: DollarSign,
-  },
-  {
-    id: 3,
-    title: "Relatório por Cliente",
-    description: "Operações agrupadas por cliente",
-    type: "cliente",
-    icon: FileText,
-  },
-  {
-    id: 4,
-    title: "Relatório de Importações",
-    description: "Análise detalhada de importações",
-    type: "importacao",
-    icon: Ship,
-  },
-  {
-    id: 5,
-    title: "Relatório de Exportações",
-    description: "Análise detalhada de exportações",
-    type: "exportacao",
-    icon: Plane,
-  },
-  {
-    id: 6,
-    title: "Relatório de Performance",
-    description: "KPIs e métricas de desempenho",
-    type: "performance",
-    icon: TrendingUp,
-  },
+const valueData = [
+  { month: "Jan", value: 1250000 },
+  { month: "Fev", value: 1180000 },
+  { month: "Mar", value: 1420000 },
+  { month: "Abr", value: 1580000 },
+  { month: "Mai", value: 1320000 },
+  { month: "Jun", value: 1650000 },
 ];
 
 const chartConfig = {
-  importacao: {
-    label: "Importação",
-    color: "#0066FF",
-  },
-  exportacao: {
-    label: "Exportação",
-    color: "#00D68F",
-  },
-  valor: {
-    label: "Valor",
-    color: "#6E56CF",
-  },
+  importacao: { label: "Importação", color: "#2563EB" },
+  exportacao: { label: "Exportação", color: "#059669" },
+  value: { label: "Valor", color: "#2563EB" },
 };
 
+const reports = [
+  { id: 1, name: "Processos por Status", description: "Distribuição de processos por situação", type: "chart" },
+  { id: 2, name: "Operações por Cliente", description: "Volume de operações por importador/exportador", type: "table" },
+  { id: 3, name: "Valores por Período", description: "Análise de valores movimentados", type: "chart" },
+  { id: 4, name: "Documentos Aduaneiros", description: "DIs, DU-Es e DUIMPs registrados", type: "table" },
+  { id: 5, name: "Performance Operacional", description: "Tempo médio de desembaraço", type: "chart" },
+];
+
 export function Reports() {
-  const [period, setPeriod] = useState("6m");
+  const [period, setPeriod] = useState("30d");
+
+  const stats = [
+    { label: "Processos", value: 127, change: "+12%", color: "text-foreground" },
+    { label: "Valor Total", value: "R$ 8.4M", change: "+18%", color: "text-primary" },
+    { label: "Liberados", value: 48, change: "+8%", color: "text-success" },
+  ];
 
   return (
     <DashboardLayout>
-      <div className="space-y-6">
+      <div className="space-y-5">
         {/* Page header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-2xl lg:text-3xl font-bold tracking-tight">Relatórios</h1>
-            <p className="text-muted-foreground mt-1">
-              Análises e relatórios gerenciais
+            <h1 className="text-xl font-semibold">Relatórios</h1>
+            <p className="text-sm text-muted-foreground mt-0.5">
+              Análises e métricas operacionais
             </p>
           </div>
           <div className="flex items-center gap-2">
             <Select value={period} onValueChange={setPeriod}>
-              <SelectTrigger className="w-[160px]">
-                <Calendar className="w-4 h-4 mr-2" />
+              <SelectTrigger className="w-36 h-9">
+                <Calendar className="w-3.5 h-3.5 mr-2 text-muted-foreground" />
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="1m">Último mês</SelectItem>
-                <SelectItem value="3m">Últimos 3 meses</SelectItem>
-                <SelectItem value="6m">Últimos 6 meses</SelectItem>
-                <SelectItem value="1y">Último ano</SelectItem>
+                <SelectItem value="7d">7 dias</SelectItem>
+                <SelectItem value="30d">30 dias</SelectItem>
+                <SelectItem value="90d">90 dias</SelectItem>
+                <SelectItem value="1y">1 ano</SelectItem>
               </SelectContent>
             </Select>
-            <Button variant="outline" size="icon">
-              <Filter className="w-4 h-4" />
+            <Button variant="outline" size="sm" className="h-9">
+              <Download className="w-4 h-4 mr-2" />
+              Exportar
             </Button>
           </div>
         </div>
 
-        {/* KPI Cards */}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <Card className="bg-gradient-to-br from-tech-blue/10 to-tech-blue/5 border-tech-blue/20">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Total Processos</p>
-                  <p className="text-2xl font-bold">250</p>
-                  <p className="text-xs text-success mt-1">+15% vs período anterior</p>
-                </div>
-                <BarChart3 className="w-8 h-8 text-tech-blue/50" />
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="bg-gradient-to-br from-success/10 to-success/5 border-success/20">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Valor Total</p>
-                  <p className="text-2xl font-bold">R$ 8.4M</p>
-                  <p className="text-xs text-success mt-1">+22% vs período anterior</p>
-                </div>
-                <DollarSign className="w-8 h-8 text-success/50" />
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Importações</p>
-                  <p className="text-2xl font-bold">178</p>
-                  <p className="text-xs text-muted-foreground mt-1">71% do total</p>
-                </div>
-                <Ship className="w-8 h-8 text-muted-foreground/50" />
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Exportações</p>
-                  <p className="text-2xl font-bold">72</p>
-                  <p className="text-xs text-muted-foreground mt-1">29% do total</p>
-                </div>
-                <Plane className="w-8 h-8 text-muted-foreground/50" />
-              </div>
-            </CardContent>
-          </Card>
+        {/* Stats row */}
+        <div className="flex flex-wrap gap-6 py-3 px-4 bg-muted/30 rounded-lg">
+          {stats.map((stat) => (
+            <div key={stat.label} className="flex items-baseline gap-2">
+              <span className={`text-xl font-semibold tabular-nums ${stat.color}`}>{stat.value}</span>
+              <span className="text-xs text-success">{stat.change}</span>
+              <span className="text-xs text-muted-foreground">{stat.label}</span>
+            </div>
+          ))}
         </div>
 
         {/* Charts */}
-        <div className="grid gap-6 lg:grid-cols-2">
-          {/* Operations by month */}
+        <div className="grid gap-4 lg:grid-cols-2">
           <Card>
-            <CardHeader>
+            <CardHeader className="pb-2">
               <CardTitle>Operações por Mês</CardTitle>
-              <CardDescription>Importações vs Exportações</CardDescription>
             </CardHeader>
-            <CardContent>
-              <ChartContainer config={chartConfig} className="h-[300px] w-full">
-                <BarChart data={monthlyData}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" />
+            <CardContent className="pt-0">
+              <ChartContainer config={chartConfig} className="h-[250px] w-full">
+                <BarChart data={monthlyData} barGap={2}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" strokeOpacity={0.5} />
                   <XAxis
                     dataKey="month"
                     tickLine={false}
                     axisLine={false}
-                    tick={{ fill: "var(--muted-foreground)", fontSize: 12 }}
+                    tick={{ fill: "var(--muted-foreground)", fontSize: 11 }}
+                    tickMargin={8}
                   />
                   <YAxis
                     tickLine={false}
                     axisLine={false}
-                    tick={{ fill: "var(--muted-foreground)", fontSize: 12 }}
+                    tick={{ fill: "var(--muted-foreground)", fontSize: 11 }}
+                    width={30}
                   />
                   <ChartTooltip content={<ChartTooltipContent />} />
-                  <Bar dataKey="importacao" fill="#0066FF" radius={[4, 4, 0, 0]} name="Importação" />
-                  <Bar dataKey="exportacao" fill="#00D68F" radius={[4, 4, 0, 0]} name="Exportação" />
+                  <Bar dataKey="importacao" fill="#2563EB" radius={[2, 2, 0, 0]} />
+                  <Bar dataKey="exportacao" fill="#059669" radius={[2, 2, 0, 0]} />
                 </BarChart>
               </ChartContainer>
+              <div className="flex justify-center gap-6 mt-2">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2.5 h-2.5 rounded-sm bg-[#2563EB]" />
+                  <span className="text-xs text-muted-foreground">Importação</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2.5 h-2.5 rounded-sm bg-[#059669]" />
+                  <span className="text-xs text-muted-foreground">Exportação</span>
+                </div>
+              </div>
             </CardContent>
           </Card>
 
-          {/* Value trend */}
           <Card>
-            <CardHeader>
-              <CardTitle>Evolução de Valores</CardTitle>
-              <CardDescription>Valor total das operações (R$)</CardDescription>
+            <CardHeader className="pb-2">
+              <div className="flex items-center justify-between">
+                <CardTitle>Valores Movimentados</CardTitle>
+                <div className="flex items-center gap-1 text-success">
+                  <TrendingUp className="w-3.5 h-3.5" />
+                  <span className="text-xs font-medium">+18%</span>
+                </div>
+              </div>
             </CardHeader>
-            <CardContent>
-              <ChartContainer config={chartConfig} className="h-[300px] w-full">
-                <AreaChart data={monthlyData}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" />
+            <CardContent className="pt-0">
+              <ChartContainer config={chartConfig} className="h-[250px] w-full">
+                <LineChart data={valueData}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" strokeOpacity={0.5} />
                   <XAxis
                     dataKey="month"
                     tickLine={false}
                     axisLine={false}
-                    tick={{ fill: "var(--muted-foreground)", fontSize: 12 }}
+                    tick={{ fill: "var(--muted-foreground)", fontSize: 11 }}
+                    tickMargin={8}
                   />
                   <YAxis
                     tickLine={false}
                     axisLine={false}
-                    tick={{ fill: "var(--muted-foreground)", fontSize: 12 }}
+                    tick={{ fill: "var(--muted-foreground)", fontSize: 11 }}
+                    width={50}
                     tickFormatter={(value) => `${(value / 1000000).toFixed(1)}M`}
                   />
                   <ChartTooltip
                     content={({ payload }) => {
                       if (payload && payload[0]) {
                         return (
-                          <div className="bg-popover border rounded-lg p-2 shadow-lg">
-                            <p className="font-medium">
-                              R$ {payload[0].value?.toLocaleString("pt-BR")}
-                            </p>
+                          <div className="bg-popover border rounded px-2 py-1.5 text-xs">
+                            <p className="font-medium">R$ {payload[0].value?.toLocaleString()}</p>
                           </div>
                         );
                       }
                       return null;
                     }}
                   />
-                  <Area
+                  <Line
                     type="monotone"
-                    dataKey="valor"
-                    stroke="#6E56CF"
-                    fill="#6E56CF"
-                    fillOpacity={0.2}
+                    dataKey="value"
+                    stroke="#2563EB"
+                    strokeWidth={2}
+                    dot={false}
                   />
-                </AreaChart>
+                </LineChart>
               </ChartContainer>
-            </CardContent>
-          </Card>
-
-          {/* Countries */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Origem das Operações</CardTitle>
-              <CardDescription>Distribuição por país</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center gap-8">
-                <ChartContainer config={chartConfig} className="h-[200px] w-[200px]">
-                  <PieChart>
-                    <Pie
-                      data={countryData}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={50}
-                      outerRadius={80}
-                      paddingAngle={4}
-                      dataKey="value"
-                    >
-                      {countryData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                  </PieChart>
-                </ChartContainer>
-                <div className="space-y-3 flex-1">
-                  {countryData.map((item) => (
-                    <div key={item.name} className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div
-                          className="w-3 h-3 rounded-full"
-                          style={{ backgroundColor: item.color }}
-                        />
-                        <span className="text-sm">{item.name}</span>
-                      </div>
-                      <span className="text-sm font-medium">{item.value}%</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Status breakdown */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Status dos Processos</CardTitle>
-              <CardDescription>Distribuição atual</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {statusData.map((item) => (
-                  <div key={item.status} className="space-y-2">
-                    <div className="flex items-center justify-between text-sm">
-                      <span>{item.status}</span>
-                      <span className="font-medium">{item.quantidade} ({item.percentual}%)</span>
-                    </div>
-                    <div className="h-2 bg-secondary rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-tech-blue rounded-full transition-all duration-500"
-                        style={{ width: `${item.percentual}%` }}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
             </CardContent>
           </Card>
         </div>
 
-        {/* Report templates */}
+        {/* Reports list */}
         <Card>
-          <CardHeader>
-            <CardTitle>Modelos de Relatórios</CardTitle>
-            <CardDescription>Gere relatórios personalizados</CardDescription>
+          <CardHeader className="pb-3">
+            <CardTitle>Relatórios Disponíveis</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {reportTemplates.map((report) => {
-                const Icon = report.icon;
-                return (
-                  <div
-                    key={report.id}
-                    className="flex items-start gap-4 p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors cursor-pointer group"
-                  >
-                    <div className="p-2 rounded-lg bg-tech-blue/10 group-hover:bg-tech-blue/20 transition-colors">
-                      <Icon className="w-5 h-5 text-tech-blue" />
+          <CardContent className="pt-0">
+            <div className="divide-y divide-border">
+              {reports.map((report) => (
+                <div
+                  key={report.id}
+                  className="flex items-center justify-between py-3 first:pt-0 last:pb-0"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded bg-muted flex items-center justify-center">
+                      {report.type === "chart" ? (
+                        <BarChart3 className="w-4 h-4 text-muted-foreground" />
+                      ) : (
+                        <FileText className="w-4 h-4 text-muted-foreground" />
+                      )}
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-medium text-sm mb-1">{report.title}</h4>
+                    <div>
+                      <p className="text-sm font-medium">{report.name}</p>
                       <p className="text-xs text-muted-foreground">{report.description}</p>
                     </div>
-                    <Button variant="ghost" size="icon" className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <Download className="w-4 h-4" />
-                    </Button>
                   </div>
-                );
-              })}
+                  <Button variant="outline" size="sm">
+                    Gerar
+                  </Button>
+                </div>
+              ))}
             </div>
           </CardContent>
         </Card>

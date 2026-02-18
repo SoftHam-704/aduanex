@@ -7,16 +7,11 @@ import {
   Edit,
   Trash2,
   Building2,
-  Mail,
-  Phone,
-  MapPin,
-  FileText,
 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   Table,
   TableBody,
@@ -62,7 +57,6 @@ const clients = [
     state: "SP",
     status: "ativo",
     processes: 15,
-    lastActivity: "10/01/2025",
   },
   {
     id: 2,
@@ -74,7 +68,6 @@ const clients = [
     state: "RJ",
     status: "ativo",
     processes: 8,
-    lastActivity: "08/01/2025",
   },
   {
     id: 3,
@@ -86,7 +79,6 @@ const clients = [
     state: "SC",
     status: "ativo",
     processes: 12,
-    lastActivity: "12/01/2025",
   },
   {
     id: 4,
@@ -98,7 +90,6 @@ const clients = [
     state: "PR",
     status: "inativo",
     processes: 3,
-    lastActivity: "15/12/2024",
   },
   {
     id: 5,
@@ -110,39 +101,12 @@ const clients = [
     state: "GO",
     status: "ativo",
     processes: 20,
-    lastActivity: "11/01/2025",
-  },
-  {
-    id: 6,
-    name: "ABC Comercial",
-    cnpj: "67.890.123/0001-45",
-    email: "abc@abccomercial.com.br",
-    phone: "(11) 6789-0123",
-    city: "São Paulo",
-    state: "SP",
-    status: "ativo",
-    processes: 5,
-    lastActivity: "09/01/2025",
   },
 ];
 
 const getInitials = (name: string) => {
-  return name
-    .split(" ")
-    .map((n) => n[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
+  return name.split(" ").map((n) => n[0]).slice(0, 2).join("").toUpperCase();
 };
-
-const colors = [
-  "from-tech-blue to-purple",
-  "from-success to-info",
-  "from-warning to-destructive",
-  "from-purple to-tech-blue",
-  "from-info to-success",
-  "from-tech-blue to-success",
-];
 
 export function Clients() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -157,61 +121,67 @@ export function Clients() {
     return matchesSearch && matchesStatus;
   });
 
+  const stats = [
+    { label: "Ativos", value: clients.filter((c) => c.status === "ativo").length, color: "text-success" },
+    { label: "Inativos", value: clients.filter((c) => c.status === "inativo").length, color: "text-muted-foreground" },
+    { label: "Total Processos", value: clients.reduce((acc, c) => acc + c.processes, 0), color: "text-primary" },
+  ];
+
   return (
     <DashboardLayout>
-      <div className="space-y-6">
+      <div className="space-y-5">
         {/* Page header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-2xl lg:text-3xl font-bold tracking-tight">Clientes</h1>
-            <p className="text-muted-foreground mt-1">
-              Gerencie seus clientes importadores e exportadores
+            <h1 className="text-xl font-semibold">Clientes</h1>
+            <p className="text-sm text-muted-foreground mt-0.5">
+              Importadores e exportadores
             </p>
           </div>
           <Dialog>
             <DialogTrigger asChild>
-              <Button className="bg-tech-blue hover:bg-tech-blue-dark">
+              <Button>
                 <Plus className="w-4 h-4 mr-2" />
                 Novo Cliente
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[600px]">
+            <DialogContent className="sm:max-w-[500px]">
               <DialogHeader>
-                <DialogTitle>Cadastrar Novo Cliente</DialogTitle>
+                <DialogTitle>Novo Cliente</DialogTitle>
                 <DialogDescription>
-                  Preencha os dados do novo cliente
+                  Cadastrar cliente
                 </DialogDescription>
               </DialogHeader>
-              <div className="grid gap-4 py-4">
+              <div className="space-y-4 py-4">
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label>Razão Social</Label>
-                    <Input placeholder="Nome da empresa" />
+                  <div className="space-y-1.5">
+                    <Label className="text-xs">Razão Social</Label>
+                    <Input placeholder="Nome da empresa" className="h-9" />
                   </div>
-                  <div className="space-y-2">
-                    <Label>CNPJ</Label>
-                    <Input placeholder="00.000.000/0000-00" />
+                  <div className="space-y-1.5">
+                    <Label className="text-xs">CNPJ</Label>
+                    <Input placeholder="00.000.000/0000-00" className="h-9 font-mono" />
                   </div>
                 </div>
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label>E-mail</Label>
-                    <Input type="email" placeholder="email@empresa.com.br" />
+                  <div className="space-y-1.5">
+                    <Label className="text-xs">E-mail</Label>
+                    <Input type="email" placeholder="email@empresa.com" className="h-9" />
                   </div>
-                  <div className="space-y-2">
-                    <Label>Telefone</Label>
-                    <Input placeholder="(00) 0000-0000" />
+                  <div className="space-y-1.5">
+                    <Label className="text-xs">Telefone</Label>
+                    <Input placeholder="(00) 0000-0000" className="h-9" />
                   </div>
                 </div>
-                <div className="grid gap-4 sm:grid-cols-3">
-                  <div className="space-y-2 sm:col-span-2">
-                    <Label>Cidade</Label>
-                    <Input placeholder="Cidade" />
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="space-y-1.5">
+                    <Label className="text-xs">Cidade</Label>
+                    <Input placeholder="Cidade" className="h-9" />
                   </div>
-                  <div className="space-y-2">
-                    <Label>Estado</Label>
+                  <div className="space-y-1.5">
+                    <Label className="text-xs">Estado</Label>
                     <Select>
-                      <SelectTrigger>
+                      <SelectTrigger className="h-9">
                         <SelectValue placeholder="UF" />
                       </SelectTrigger>
                       <SelectContent>
@@ -219,187 +189,113 @@ export function Clients() {
                         <SelectItem value="RJ">RJ</SelectItem>
                         <SelectItem value="SC">SC</SelectItem>
                         <SelectItem value="PR">PR</SelectItem>
-                        <SelectItem value="RS">RS</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                 </div>
               </div>
               <DialogFooter>
-                <Button variant="outline">Cancelar</Button>
-                <Button className="bg-tech-blue hover:bg-tech-blue-dark">Salvar</Button>
+                <Button variant="outline" size="sm">Cancelar</Button>
+                <Button size="sm">Cadastrar</Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
         </div>
 
-        {/* Stats */}
-        <div className="grid gap-4 sm:grid-cols-3">
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center gap-4">
-                <div className="p-3 rounded-xl bg-tech-blue/10">
-                  <Building2 className="w-6 h-6 text-tech-blue" />
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Total de Clientes</p>
-                  <p className="text-2xl font-bold">{clients.length}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center gap-4">
-                <div className="p-3 rounded-xl bg-success/10">
-                  <Building2 className="w-6 h-6 text-success" />
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Clientes Ativos</p>
-                  <p className="text-2xl font-bold text-success">
-                    {clients.filter((c) => c.status === "ativo").length}
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center gap-4">
-                <div className="p-3 rounded-xl bg-purple/10">
-                  <FileText className="w-6 h-6 text-purple" />
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Processos Total</p>
-                  <p className="text-2xl font-bold text-purple">
-                    {clients.reduce((sum, c) => sum + c.processes, 0)}
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+        {/* Stats row */}
+        <div className="flex flex-wrap gap-6 py-3 px-4 bg-muted/30 rounded-lg">
+          {stats.map((stat) => (
+            <div key={stat.label} className="flex items-baseline gap-2">
+              <span className={`text-xl font-semibold tabular-nums ${stat.color}`}>{stat.value}</span>
+              <span className="text-xs text-muted-foreground">{stat.label}</span>
+            </div>
+          ))}
         </div>
 
         {/* Filters */}
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex flex-col sm:flex-row gap-4">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
-                  placeholder="Buscar por nome, CNPJ ou e-mail..."
-                  className="pl-10"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-[140px]">
-                  <SelectValue placeholder="Status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todos</SelectItem>
-                  <SelectItem value="ativo">Ativos</SelectItem>
-                  <SelectItem value="inativo">Inativos</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </CardContent>
-        </Card>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              placeholder="Buscar cliente..."
+              className="pl-9 h-9"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-32 h-9">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos</SelectItem>
+              <SelectItem value="ativo">Ativos</SelectItem>
+              <SelectItem value="inativo">Inativos</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
 
         {/* Table */}
         <Card>
           <CardContent className="p-0">
             <Table>
               <TableHeader>
-                <TableRow className="bg-muted/50">
+                <TableRow>
                   <TableHead>Cliente</TableHead>
                   <TableHead className="hidden md:table-cell">CNPJ</TableHead>
                   <TableHead className="hidden lg:table-cell">Contato</TableHead>
-                  <TableHead className="hidden lg:table-cell">Localização</TableHead>
-                  <TableHead>Processos</TableHead>
+                  <TableHead className="hidden md:table-cell">Local</TableHead>
+                  <TableHead className="text-right">Processos</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead className="w-12"></TableHead>
+                  <TableHead className="w-10"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredClients.map((client, index) => (
-                  <TableRow key={client.id} className="cursor-pointer hover:bg-muted/50">
+                {filteredClients.map((client) => (
+                  <TableRow key={client.id} className="cursor-pointer">
                     <TableCell>
                       <div className="flex items-center gap-3">
-                        <Avatar className="h-10 w-10">
-                          <AvatarFallback
-                            className={`bg-gradient-to-br ${colors[index % colors.length]} text-white font-semibold`}
-                          >
-                            {getInitials(client.name)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="font-medium">{client.name}</p>
-                          <p className="text-xs text-muted-foreground md:hidden">{client.cnpj}</p>
+                        <div className="w-8 h-8 rounded bg-primary/10 flex items-center justify-center flex-shrink-0">
+                          <span className="text-xs font-medium text-primary">{getInitials(client.name)}</span>
                         </div>
+                        <span className="text-sm font-medium truncate max-w-[180px]">{client.name}</span>
                       </div>
                     </TableCell>
                     <TableCell className="hidden md:table-cell">
-                      <p className="font-mono text-sm">{client.cnpj}</p>
+                      <span className="text-sm font-mono text-muted-foreground">{client.cnpj}</span>
                     </TableCell>
                     <TableCell className="hidden lg:table-cell">
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-1 text-sm">
-                          <Mail className="w-3 h-3 text-muted-foreground" />
-                          {client.email}
-                        </div>
-                        <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                          <Phone className="w-3 h-3" />
-                          {client.phone}
-                        </div>
-                      </div>
+                      <span className="text-sm text-muted-foreground truncate max-w-[180px]">{client.email}</span>
                     </TableCell>
-                    <TableCell className="hidden lg:table-cell">
-                      <div className="flex items-center gap-1 text-sm">
-                        <MapPin className="w-3 h-3 text-muted-foreground" />
-                        {client.city}, {client.state}
-                      </div>
+                    <TableCell className="hidden md:table-cell">
+                      <span className="text-sm">{client.city}/{client.state}</span>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <span className="text-sm font-medium tabular-nums">{client.processes}</span>
                     </TableCell>
                     <TableCell>
-                      <Badge variant="secondary" className="font-mono">
-                        {client.processes}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Badge
-                        className={
-                          client.status === "ativo"
-                            ? "bg-success/20 text-success border-success/30"
-                            : "bg-muted text-muted-foreground"
-                        }
-                        variant="outline"
-                      >
+                      <Badge variant={client.status === "ativo" ? "success" : "secondary"}>
                         {client.status === "ativo" ? "Ativo" : "Inativo"}
                       </Badge>
                     </TableCell>
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-8 w-8">
+                          <Button variant="ghost" size="icon-sm">
                             <MoreHorizontal className="w-4 h-4" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem className="cursor-pointer">
+                          <DropdownMenuItem className="text-sm">
                             <Eye className="w-4 h-4 mr-2" />
                             Visualizar
                           </DropdownMenuItem>
-                          <DropdownMenuItem className="cursor-pointer">
+                          <DropdownMenuItem className="text-sm">
                             <Edit className="w-4 h-4 mr-2" />
                             Editar
                           </DropdownMenuItem>
-                          <DropdownMenuItem className="cursor-pointer">
-                            <FileText className="w-4 h-4 mr-2" />
-                            Ver Processos
-                          </DropdownMenuItem>
                           <DropdownMenuSeparator />
-                          <DropdownMenuItem className="text-destructive cursor-pointer">
+                          <DropdownMenuItem className="text-destructive text-sm">
                             <Trash2 className="w-4 h-4 mr-2" />
                             Excluir
                           </DropdownMenuItem>
@@ -410,6 +306,12 @@ export function Clients() {
                 ))}
               </TableBody>
             </Table>
+
+            <div className="flex items-center justify-between px-4 py-3 border-t border-border">
+              <p className="text-xs text-muted-foreground">
+                {filteredClients.length} clientes
+              </p>
+            </div>
           </CardContent>
         </Card>
       </div>

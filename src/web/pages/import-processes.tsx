@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Link } from "wouter";
 import {
   Search,
-  Filter,
   Plus,
   MoreHorizontal,
   Eye,
@@ -10,13 +9,12 @@ import {
   Trash2,
   Download,
   Ship,
-  Calendar,
   ChevronLeft,
   ChevronRight,
   X,
   SlidersHorizontal,
 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -68,7 +66,7 @@ const processes = [
     channel: null,
     eta: "15/01/2025",
     value: "USD 45,000.00",
-    valueBrl: "R$ 225.000,00",
+    valueBrl: "R$ 225.000",
     createdAt: "10/01/2025",
   },
   {
@@ -82,7 +80,7 @@ const processes = [
     channel: "verde",
     eta: "12/01/2025",
     value: "EUR 85,000.00",
-    valueBrl: "R$ 467.500,00",
+    valueBrl: "R$ 467.500",
     createdAt: "05/01/2025",
   },
   {
@@ -96,7 +94,7 @@ const processes = [
     channel: "vermelho",
     eta: "18/01/2025",
     value: "JPY 12,500,000",
-    valueBrl: "R$ 412.500,00",
+    valueBrl: "R$ 412.500",
     createdAt: "03/01/2025",
   },
   {
@@ -110,7 +108,7 @@ const processes = [
     channel: null,
     eta: "20/01/2025",
     value: "EUR 32,000.00",
-    valueBrl: "R$ 176.000,00",
+    valueBrl: "R$ 176.000",
     createdAt: "02/01/2025",
   },
   {
@@ -124,7 +122,7 @@ const processes = [
     channel: "amarelo",
     eta: "22/01/2025",
     value: "USD 28,500.00",
-    valueBrl: "R$ 142.500,00",
+    valueBrl: "R$ 142.500",
     createdAt: "28/12/2024",
   },
   {
@@ -138,7 +136,7 @@ const processes = [
     channel: "verde",
     eta: "08/01/2025",
     value: "USD 67,800.00",
-    valueBrl: "R$ 339.000,00",
+    valueBrl: "R$ 339.000",
     createdAt: "20/12/2024",
   },
   {
@@ -152,25 +150,24 @@ const processes = [
     channel: null,
     eta: "25/01/2025",
     value: "USD 54,200.00",
-    valueBrl: "R$ 271.000,00",
+    valueBrl: "R$ 271.000",
     createdAt: "18/12/2024",
   },
 ];
 
-const statusConfig: Record<string, { label: string; color: string }> = {
-  em_analise: { label: "Em Análise", color: "bg-tech-blue text-white" },
-  desembaracado: { label: "Desembaraçado", color: "bg-success text-white" },
-  aguardando_docs: { label: "Aguardando Docs", color: "bg-warning text-white" },
-  canal_vermelho: { label: "Canal Vermelho", color: "bg-destructive text-white" },
-  exigencia: { label: "Exigência", color: "bg-purple text-white" },
-  transito: { label: "Em Trânsito", color: "bg-info text-white" },
+const statusConfig: Record<string, { label: string; variant: "default" | "success" | "warning" | "destructive" | "info" }> = {
+  em_analise: { label: "Em Análise", variant: "default" },
+  desembaracado: { label: "Liberado", variant: "success" },
+  aguardando_docs: { label: "Aguardando", variant: "warning" },
+  canal_vermelho: { label: "Canal Vermelho", variant: "destructive" },
+  exigencia: { label: "Exigência", variant: "warning" },
+  transito: { label: "Trânsito", variant: "info" },
 };
 
 const channelConfig: Record<string, { label: string; color: string }> = {
-  verde: { label: "Verde", color: "bg-success/20 text-success border-success/30" },
-  amarelo: { label: "Amarelo", color: "bg-yellow-500/20 text-yellow-600 border-yellow-500/30" },
-  vermelho: { label: "Vermelho", color: "bg-destructive/20 text-destructive border-destructive/30" },
-  cinza: { label: "Cinza", color: "bg-gray-500/20 text-gray-600 border-gray-500/30" },
+  verde: { label: "Verde", color: "text-success" },
+  amarelo: { label: "Amarelo", color: "text-warning" },
+  vermelho: { label: "Vermelho", color: "text-destructive" },
 };
 
 export function ImportProcesses() {
@@ -212,419 +209,311 @@ export function ImportProcesses() {
     }
   };
 
+  const stats = [
+    { label: "Total", value: 127, color: "text-foreground" },
+    { label: "Liberados", value: 48, color: "text-success" },
+    { label: "Em Andamento", value: 72, color: "text-primary" },
+    { label: "Exigências", value: 7, color: "text-destructive" },
+  ];
+
   return (
     <DashboardLayout>
-      <div className="space-y-6">
+      <div className="space-y-5">
         {/* Page header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-2xl lg:text-3xl font-bold tracking-tight">
-              Processos de Importação
-            </h1>
-            <p className="text-muted-foreground mt-1">
-              Gerencie todos os processos de importação
+            <h1 className="text-xl font-semibold">Importação</h1>
+            <p className="text-sm text-muted-foreground mt-0.5">
+              Gerencie processos de importação
             </p>
           </div>
           <Link href="/importacao/novo">
-            <Button className="bg-tech-blue hover:bg-tech-blue-dark">
+            <Button>
               <Plus className="w-4 h-4 mr-2" />
               Novo Processo
             </Button>
           </Link>
         </div>
 
-        {/* Stats cards */}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <Card className="bg-gradient-to-br from-tech-blue/10 to-tech-blue/5 border-tech-blue/20">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Total de Processos</p>
-                  <p className="text-2xl font-bold text-tech-blue">127</p>
-                </div>
-                <Ship className="w-8 h-8 text-tech-blue/50" />
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="bg-gradient-to-br from-success/10 to-success/5 border-success/20">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Desembaraçados</p>
-                  <p className="text-2xl font-bold text-success">48</p>
-                </div>
-                <div className="w-8 h-8 rounded-full bg-success/20 flex items-center justify-center">
-                  <span className="text-success font-bold">✓</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="bg-gradient-to-br from-warning/10 to-warning/5 border-warning/20">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Em Andamento</p>
-                  <p className="text-2xl font-bold text-warning">72</p>
-                </div>
-                <div className="w-8 h-8 rounded-full bg-warning/20 flex items-center justify-center">
-                  <span className="text-warning font-bold">⏳</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="bg-gradient-to-br from-destructive/10 to-destructive/5 border-destructive/20">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Exigências</p>
-                  <p className="text-2xl font-bold text-destructive">7</p>
-                </div>
-                <div className="w-8 h-8 rounded-full bg-destructive/20 flex items-center justify-center">
-                  <span className="text-destructive font-bold">!</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+        {/* Stats - compact row */}
+        <div className="flex flex-wrap gap-6 py-3 px-4 bg-muted/30 rounded-lg">
+          {stats.map((stat) => (
+            <div key={stat.label} className="flex items-baseline gap-2">
+              <span className={`text-xl font-semibold tabular-nums ${stat.color}`}>{stat.value}</span>
+              <span className="text-xs text-muted-foreground">{stat.label}</span>
+            </div>
+          ))}
         </div>
 
         {/* Filters and search */}
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex flex-col lg:flex-row gap-4">
-              {/* Search */}
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
-                  placeholder="Buscar por ID, cliente, fornecedor ou DI..."
-                  className="pl-10"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
+        <div className="flex flex-col lg:flex-row gap-3">
+          {/* Search */}
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              placeholder="Buscar por ID, cliente, fornecedor..."
+              className="pl-9 h-9"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
 
-              {/* Quick filters */}
-              <div className="flex flex-wrap gap-2">
-                <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger className="w-[160px]">
-                    <SelectValue placeholder="Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todos os status</SelectItem>
-                    <SelectItem value="em_analise">Em Análise</SelectItem>
-                    <SelectItem value="desembaracado">Desembaraçado</SelectItem>
-                    <SelectItem value="aguardando_docs">Aguardando Docs</SelectItem>
-                    <SelectItem value="canal_vermelho">Canal Vermelho</SelectItem>
-                    <SelectItem value="exigencia">Exigência</SelectItem>
-                    <SelectItem value="transito">Em Trânsito</SelectItem>
-                  </SelectContent>
-                </Select>
+          {/* Filters */}
+          <div className="flex flex-wrap gap-2">
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-36 h-9">
+                <SelectValue placeholder="Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos</SelectItem>
+                <SelectItem value="em_analise">Em Análise</SelectItem>
+                <SelectItem value="desembaracado">Liberado</SelectItem>
+                <SelectItem value="aguardando_docs">Aguardando</SelectItem>
+                <SelectItem value="canal_vermelho">Canal Vermelho</SelectItem>
+                <SelectItem value="exigencia">Exigência</SelectItem>
+                <SelectItem value="transito">Trânsito</SelectItem>
+              </SelectContent>
+            </Select>
 
-                <Select value={portFilter} onValueChange={setPortFilter}>
-                  <SelectTrigger className="w-[140px]">
-                    <SelectValue placeholder="Porto" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todos os portos</SelectItem>
-                    <SelectItem value="Santos">Santos</SelectItem>
-                    <SelectItem value="Paranaguá">Paranaguá</SelectItem>
-                    <SelectItem value="Itajaí">Itajaí</SelectItem>
-                    <SelectItem value="Rio Grande">Rio Grande</SelectItem>
-                  </SelectContent>
-                </Select>
+            <Select value={portFilter} onValueChange={setPortFilter}>
+              <SelectTrigger className="w-32 h-9">
+                <SelectValue placeholder="Porto" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos</SelectItem>
+                <SelectItem value="Santos">Santos</SelectItem>
+                <SelectItem value="Paranaguá">Paranaguá</SelectItem>
+                <SelectItem value="Itajaí">Itajaí</SelectItem>
+              </SelectContent>
+            </Select>
 
-                {/* Advanced filters sheet */}
-                <Sheet>
-                  <SheetTrigger asChild>
-                    <Button variant="outline" size="icon">
-                      <SlidersHorizontal className="w-4 h-4" />
-                    </Button>
-                  </SheetTrigger>
-                  <SheetContent>
-                    <SheetHeader>
-                      <SheetTitle>Filtros Avançados</SheetTitle>
-                      <SheetDescription>
-                        Refine sua busca com filtros adicionais
-                      </SheetDescription>
-                    </SheetHeader>
-                    <div className="space-y-6 py-6">
-                      <div className="space-y-2">
-                        <Label>Período de Cadastro</Label>
-                        <div className="grid grid-cols-2 gap-2">
-                          <Input type="date" placeholder="De" />
-                          <Input type="date" placeholder="Até" />
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <Label>País de Origem</Label>
-                        <Select>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Selecione" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="china">China</SelectItem>
-                            <SelectItem value="alemanha">Alemanha</SelectItem>
-                            <SelectItem value="eua">EUA</SelectItem>
-                            <SelectItem value="japao">Japão</SelectItem>
-                            <SelectItem value="italia">Itália</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-2">
-                        <Label>Valor (USD)</Label>
-                        <div className="grid grid-cols-2 gap-2">
-                          <Input type="number" placeholder="Mínimo" />
-                          <Input type="number" placeholder="Máximo" />
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <Label>Canal Parametrizado</Label>
-                        <Select>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Selecione" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="verde">Verde</SelectItem>
-                            <SelectItem value="amarelo">Amarelo</SelectItem>
-                            <SelectItem value="vermelho">Vermelho</SelectItem>
-                            <SelectItem value="cinza">Cinza</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-2">
-                        <Label>Cliente</Label>
-                        <Select>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Selecione" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="tech">Tech Solutions LTDA</SelectItem>
-                            <SelectItem value="global">Global Trade Corp</SelectItem>
-                            <SelectItem value="abc">ABC Comercial</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="outline" size="icon" className="h-9 w-9">
+                  <SlidersHorizontal className="w-4 h-4" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent>
+                <SheetHeader>
+                  <SheetTitle>Filtros Avançados</SheetTitle>
+                  <SheetDescription>
+                    Refine sua busca
+                  </SheetDescription>
+                </SheetHeader>
+                <div className="space-y-5 py-5">
+                  <div className="space-y-2">
+                    <Label className="text-xs">Período</Label>
+                    <div className="grid grid-cols-2 gap-2">
+                      <Input type="date" className="h-9" />
+                      <Input type="date" className="h-9" />
                     </div>
-                    <SheetFooter>
-                      <Button variant="outline">Limpar Filtros</Button>
-                      <Button className="bg-tech-blue hover:bg-tech-blue-dark">Aplicar</Button>
-                    </SheetFooter>
-                  </SheetContent>
-                </Sheet>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-xs">País de Origem</Label>
+                    <Select>
+                      <SelectTrigger className="h-9">
+                        <SelectValue placeholder="Selecione" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="china">China</SelectItem>
+                        <SelectItem value="alemanha">Alemanha</SelectItem>
+                        <SelectItem value="eua">EUA</SelectItem>
+                        <SelectItem value="japao">Japão</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-xs">Valor (USD)</Label>
+                    <div className="grid grid-cols-2 gap-2">
+                      <Input type="number" placeholder="Mín" className="h-9" />
+                      <Input type="number" placeholder="Máx" className="h-9" />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-xs">Canal</Label>
+                    <Select>
+                      <SelectTrigger className="h-9">
+                        <SelectValue placeholder="Selecione" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="verde">Verde</SelectItem>
+                        <SelectItem value="amarelo">Amarelo</SelectItem>
+                        <SelectItem value="vermelho">Vermelho</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <SheetFooter>
+                  <Button variant="outline" size="sm">Limpar</Button>
+                  <Button size="sm">Aplicar</Button>
+                </SheetFooter>
+              </SheetContent>
+            </Sheet>
 
-                <Button variant="outline">
-                  <Download className="w-4 h-4 mr-2" />
-                  Exportar
-                </Button>
-              </div>
-            </div>
+            <Button variant="outline" size="sm" className="h-9">
+              <Download className="w-4 h-4 mr-2" />
+              Exportar
+            </Button>
+          </div>
+        </div>
 
-            {/* Active filters */}
-            {(statusFilter !== "all" || portFilter !== "all" || searchTerm) && (
-              <div className="flex flex-wrap items-center gap-2 mt-4 pt-4 border-t">
-                <span className="text-sm text-muted-foreground">Filtros ativos:</span>
-                {searchTerm && (
-                  <Badge variant="secondary" className="gap-1">
-                    Busca: {searchTerm}
-                    <X
-                      className="w-3 h-3 cursor-pointer"
-                      onClick={() => setSearchTerm("")}
-                    />
-                  </Badge>
-                )}
-                {statusFilter !== "all" && (
-                  <Badge variant="secondary" className="gap-1">
-                    Status: {statusConfig[statusFilter]?.label}
-                    <X
-                      className="w-3 h-3 cursor-pointer"
-                      onClick={() => setStatusFilter("all")}
-                    />
-                  </Badge>
-                )}
-                {portFilter !== "all" && (
-                  <Badge variant="secondary" className="gap-1">
-                    Porto: {portFilter}
-                    <X
-                      className="w-3 h-3 cursor-pointer"
-                      onClick={() => setPortFilter("all")}
-                    />
-                  </Badge>
-                )}
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-destructive h-6"
-                  onClick={() => {
-                    setSearchTerm("");
-                    setStatusFilter("all");
-                    setPortFilter("all");
-                  }}
-                >
-                  Limpar todos
-                </Button>
-              </div>
+        {/* Active filters */}
+        {(statusFilter !== "all" || portFilter !== "all" || searchTerm) && (
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-xs text-muted-foreground">Filtros:</span>
+            {searchTerm && (
+              <Badge variant="secondary" className="gap-1 text-xs">
+                "{searchTerm}"
+                <X className="w-3 h-3 cursor-pointer" onClick={() => setSearchTerm("")} />
+              </Badge>
             )}
-          </CardContent>
-        </Card>
+            {statusFilter !== "all" && (
+              <Badge variant="secondary" className="gap-1 text-xs">
+                {statusConfig[statusFilter]?.label}
+                <X className="w-3 h-3 cursor-pointer" onClick={() => setStatusFilter("all")} />
+              </Badge>
+            )}
+            {portFilter !== "all" && (
+              <Badge variant="secondary" className="gap-1 text-xs">
+                {portFilter}
+                <X className="w-3 h-3 cursor-pointer" onClick={() => setPortFilter("all")} />
+              </Badge>
+            )}
+            <button
+              className="text-xs text-muted-foreground hover:text-foreground"
+              onClick={() => {
+                setSearchTerm("");
+                setStatusFilter("all");
+                setPortFilter("all");
+              }}
+            >
+              Limpar
+            </button>
+          </div>
+        )}
 
         {/* Table */}
         <Card>
           <CardContent className="p-0">
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow className="bg-muted/50">
-                    <TableHead className="w-12">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-10">
+                    <input
+                      type="checkbox"
+                      className="rounded border-input w-4 h-4"
+                      checked={selectedRows.length === paginatedProcesses.length && paginatedProcesses.length > 0}
+                      onChange={toggleAllSelection}
+                    />
+                  </TableHead>
+                  <TableHead>Processo</TableHead>
+                  <TableHead className="hidden md:table-cell">Cliente</TableHead>
+                  <TableHead className="hidden lg:table-cell">Origem</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="hidden md:table-cell">Canal</TableHead>
+                  <TableHead className="hidden lg:table-cell text-right">Valor</TableHead>
+                  <TableHead className="w-10"></TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {paginatedProcesses.map((process) => (
+                  <TableRow
+                    key={process.id}
+                    className={cn(
+                      "cursor-pointer",
+                      selectedRows.includes(process.id) && "bg-primary/5"
+                    )}
+                  >
+                    <TableCell>
                       <input
                         type="checkbox"
-                        className="rounded border-input"
-                        checked={selectedRows.length === paginatedProcesses.length && paginatedProcesses.length > 0}
-                        onChange={toggleAllSelection}
+                        className="rounded border-input w-4 h-4"
+                        checked={selectedRows.includes(process.id)}
+                        onChange={() => toggleRowSelection(process.id)}
+                        onClick={(e) => e.stopPropagation()}
                       />
-                    </TableHead>
-                    <TableHead>Processo</TableHead>
-                    <TableHead>Cliente</TableHead>
-                    <TableHead className="hidden md:table-cell">Fornecedor</TableHead>
-                    <TableHead className="hidden lg:table-cell">Origem</TableHead>
-                    <TableHead className="hidden lg:table-cell">Porto</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="hidden md:table-cell">Canal</TableHead>
-                    <TableHead className="hidden lg:table-cell">Valor</TableHead>
-                    <TableHead className="hidden lg:table-cell">ETA</TableHead>
-                    <TableHead className="w-12"></TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {paginatedProcesses.map((process) => (
-                    <TableRow
-                      key={process.id}
-                      className={cn(
-                        "cursor-pointer hover:bg-muted/50 transition-colors",
-                        selectedRows.includes(process.id) && "bg-primary/5"
-                      )}
-                    >
-                      <TableCell>
-                        <input
-                          type="checkbox"
-                          className="rounded border-input"
-                          checked={selectedRows.includes(process.id)}
-                          onChange={() => toggleRowSelection(process.id)}
-                          onClick={(e) => e.stopPropagation()}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <div>
-                          <p className="font-medium text-sm">{process.id}</p>
-                          {process.diNumber && (
-                            <p className="text-xs text-muted-foreground">DI: {process.diNumber}</p>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <p className="text-sm truncate max-w-[150px]">{process.client}</p>
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        <p className="text-sm truncate max-w-[150px]">{process.supplier}</p>
-                      </TableCell>
-                      <TableCell className="hidden lg:table-cell">
-                        <p className="text-sm">{process.origin}</p>
-                      </TableCell>
-                      <TableCell className="hidden lg:table-cell">
-                        <p className="text-sm">{process.port}</p>
-                      </TableCell>
-                      <TableCell>
-                        <Badge className={`${statusConfig[process.status]?.color} text-xs whitespace-nowrap`}>
-                          {statusConfig[process.status]?.label}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        {process.channel ? (
-                          <Badge
-                            variant="outline"
-                            className={`${channelConfig[process.channel]?.color} text-xs`}
-                          >
-                            {channelConfig[process.channel]?.label}
-                          </Badge>
-                        ) : (
-                          <span className="text-xs text-muted-foreground">-</span>
+                    </TableCell>
+                    <TableCell>
+                      <div>
+                        <p className="font-medium text-sm font-mono">{process.id}</p>
+                        {process.diNumber && (
+                          <p className="text-xs text-muted-foreground font-mono">DI {process.diNumber}</p>
                         )}
-                      </TableCell>
-                      <TableCell className="hidden lg:table-cell">
-                        <div>
-                          <p className="text-sm font-medium">{process.value}</p>
-                          <p className="text-xs text-muted-foreground">{process.valueBrl}</p>
-                        </div>
-                      </TableCell>
-                      <TableCell className="hidden lg:table-cell">
-                        <div className="flex items-center gap-1">
-                          <Calendar className="w-3 h-3 text-muted-foreground" />
-                          <span className="text-sm">{process.eta}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-8 w-8">
-                              <MoreHorizontal className="w-4 h-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem className="cursor-pointer">
-                              <Eye className="w-4 h-4 mr-2" />
-                              Visualizar
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="cursor-pointer">
-                              <Edit className="w-4 h-4 mr-2" />
-                              Editar
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="cursor-pointer">
-                              <Download className="w-4 h-4 mr-2" />
-                              Exportar PDF
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem className="text-destructive cursor-pointer">
-                              <Trash2 className="w-4 h-4 mr-2" />
-                              Excluir
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
+                      </div>
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      <p className="text-sm truncate max-w-[180px]">{process.client}</p>
+                    </TableCell>
+                    <TableCell className="hidden lg:table-cell">
+                      <p className="text-sm">{process.origin}</p>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant={statusConfig[process.status]?.variant || "default"}>
+                        {statusConfig[process.status]?.label}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      {process.channel ? (
+                        <span className={`text-sm font-medium ${channelConfig[process.channel]?.color}`}>
+                          {channelConfig[process.channel]?.label}
+                        </span>
+                      ) : (
+                        <span className="text-sm text-muted-foreground">—</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="hidden lg:table-cell text-right">
+                      <span className="text-sm font-medium tabular-nums">{process.valueBrl}</span>
+                    </TableCell>
+                    <TableCell>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon-sm" className="h-8 w-8">
+                            <MoreHorizontal className="w-4 h-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem className="text-sm">
+                            <Eye className="w-4 h-4 mr-2" />
+                            Visualizar
+                          </DropdownMenuItem>
+                          <DropdownMenuItem className="text-sm">
+                            <Edit className="w-4 h-4 mr-2" />
+                            Editar
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem className="text-destructive text-sm">
+                            <Trash2 className="w-4 h-4 mr-2" />
+                            Excluir
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
 
             {/* Pagination */}
-            <div className="flex items-center justify-between px-4 py-4 border-t">
-              <p className="text-sm text-muted-foreground">
-                Mostrando {(currentPage - 1) * itemsPerPage + 1} a{" "}
-                {Math.min(currentPage * itemsPerPage, filteredProcesses.length)} de{" "}
+            <div className="flex items-center justify-between px-4 py-3 border-t border-border">
+              <p className="text-xs text-muted-foreground">
                 {filteredProcesses.length} processos
               </p>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1">
                 <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </Button>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                  <Button
-                    key={page}
-                    variant={currentPage === page ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setCurrentPage(page)}
-                    className={currentPage === page ? "bg-tech-blue hover:bg-tech-blue-dark" : ""}
-                  >
-                    {page}
-                  </Button>
-                ))}
+                <span className="text-sm px-2">
+                  {currentPage} / {totalPages || 1}
+                </span>
                 <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                   disabled={currentPage === totalPages}
                 >
                   <ChevronRight className="w-4 h-4" />

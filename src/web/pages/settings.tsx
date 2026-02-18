@@ -1,20 +1,16 @@
 import { useState } from "react";
 import {
   User,
-  Building2,
   Bell,
   Shield,
+  Database,
   Palette,
-  Globe,
-  Mail,
-  Save,
 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
   SelectContent,
@@ -22,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
 
 export function Settings() {
@@ -30,374 +26,199 @@ export function Settings() {
 
   return (
     <DashboardLayout>
-      <div className="space-y-6">
+      <div className="space-y-5">
         {/* Page header */}
         <div>
-          <h1 className="text-2xl lg:text-3xl font-bold tracking-tight">Configurações</h1>
-          <p className="text-muted-foreground mt-1">
-            Gerencie suas preferências e configurações do sistema
+          <h1 className="text-xl font-semibold">Configurações</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">
+            Gerencie suas preferências
           </p>
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-5 lg:w-auto">
-            <TabsTrigger value="perfil" className="gap-2">
-              <User className="w-4 h-4 hidden sm:block" />
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="h-9 p-1">
+            <TabsTrigger value="perfil" className="text-xs h-7 px-3">
+              <User className="w-3.5 h-3.5 mr-1.5" />
               Perfil
             </TabsTrigger>
-            <TabsTrigger value="empresa" className="gap-2">
-              <Building2 className="w-4 h-4 hidden sm:block" />
-              Empresa
-            </TabsTrigger>
-            <TabsTrigger value="notificacoes" className="gap-2">
-              <Bell className="w-4 h-4 hidden sm:block" />
+            <TabsTrigger value="notificacoes" className="text-xs h-7 px-3">
+              <Bell className="w-3.5 h-3.5 mr-1.5" />
               Notificações
             </TabsTrigger>
-            <TabsTrigger value="aparencia" className="gap-2">
-              <Palette className="w-4 h-4 hidden sm:block" />
+            <TabsTrigger value="aparencia" className="text-xs h-7 px-3">
+              <Palette className="w-3.5 h-3.5 mr-1.5" />
               Aparência
             </TabsTrigger>
-            <TabsTrigger value="seguranca" className="gap-2">
-              <Shield className="w-4 h-4 hidden sm:block" />
+            <TabsTrigger value="seguranca" className="text-xs h-7 px-3">
+              <Shield className="w-3.5 h-3.5 mr-1.5" />
               Segurança
             </TabsTrigger>
           </TabsList>
 
-          {/* Profile */}
-          <TabsContent value="perfil">
+          {/* Perfil */}
+          <TabsContent value="perfil" className="space-y-4 mt-4">
             <Card>
-              <CardHeader>
-                <CardTitle>Informações Pessoais</CardTitle>
-                <CardDescription>
-                  Atualize seus dados pessoais e de contato
-                </CardDescription>
+              <CardHeader className="pb-3">
+                <CardTitle>Dados Pessoais</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
+              <CardContent className="space-y-4">
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label>Nome Completo</Label>
-                    <Input defaultValue="João Silva" />
+                  <div className="space-y-1.5">
+                    <Label className="text-xs">Nome</Label>
+                    <Input defaultValue="João Silva" className="h-9" />
                   </div>
-                  <div className="space-y-2">
-                    <Label>CPF</Label>
-                    <Input defaultValue="123.456.789-00" />
+                  <div className="space-y-1.5">
+                    <Label className="text-xs">E-mail</Label>
+                    <Input type="email" defaultValue="joao@aduanex.com" className="h-9" />
                   </div>
                 </div>
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label>E-mail</Label>
-                    <Input type="email" defaultValue="joao@aduanex.com" />
+                  <div className="space-y-1.5">
+                    <Label className="text-xs">Telefone</Label>
+                    <Input defaultValue="(11) 99999-9999" className="h-9" />
                   </div>
-                  <div className="space-y-2">
-                    <Label>Telefone</Label>
-                    <Input defaultValue="(11) 99999-9999" />
+                  <div className="space-y-1.5">
+                    <Label className="text-xs">Cargo</Label>
+                    <Input defaultValue="Despachante Aduaneiro" className="h-9" />
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <Label>Cargo</Label>
-                  <Select defaultValue="despachante">
-                    <SelectTrigger>
+                <Button size="sm">Salvar</Button>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle>Empresa</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="space-y-1.5">
+                    <Label className="text-xs">Razão Social</Label>
+                    <Input defaultValue="ADUANEX Logística LTDA" className="h-9" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-xs">CNPJ</Label>
+                    <Input defaultValue="12.345.678/0001-90" className="h-9 font-mono" />
+                  </div>
+                </div>
+                <Button size="sm">Salvar</Button>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Notificações */}
+          <TabsContent value="notificacoes" className="space-y-4 mt-4">
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle>Preferências de Notificação</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium">E-mail</p>
+                    <p className="text-xs text-muted-foreground">Receber notificações por e-mail</p>
+                  </div>
+                  <Switch defaultChecked />
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium">Push</p>
+                    <p className="text-xs text-muted-foreground">Notificações no navegador</p>
+                  </div>
+                  <Switch defaultChecked />
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium">Alertas de Prazo</p>
+                    <p className="text-xs text-muted-foreground">Avisos de vencimentos</p>
+                  </div>
+                  <Switch defaultChecked />
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium">Exigências SISCOMEX</p>
+                    <p className="text-xs text-muted-foreground">Novas exigências registradas</p>
+                  </div>
+                  <Switch defaultChecked />
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Aparência */}
+          <TabsContent value="aparencia" className="space-y-4 mt-4">
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle>Tema</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-1.5">
+                  <Label className="text-xs">Modo de Cores</Label>
+                  <Select defaultValue="system">
+                    <SelectTrigger className="w-48 h-9">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="despachante">Despachante Aduaneiro</SelectItem>
-                      <SelectItem value="analista">Analista de Comércio Exterior</SelectItem>
-                      <SelectItem value="gerente">Gerente de Operações</SelectItem>
-                      <SelectItem value="diretor">Diretor</SelectItem>
+                      <SelectItem value="light">Claro</SelectItem>
+                      <SelectItem value="dark">Escuro</SelectItem>
+                      <SelectItem value="system">Sistema</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="flex justify-end">
-                  <Button className="bg-tech-blue hover:bg-tech-blue-dark">
-                    <Save className="w-4 h-4 mr-2" />
-                    Salvar Alterações
-                  </Button>
+                <div className="space-y-1.5">
+                  <Label className="text-xs">Densidade</Label>
+                  <Select defaultValue="normal">
+                    <SelectTrigger className="w-48 h-9">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="compact">Compacto</SelectItem>
+                      <SelectItem value="normal">Normal</SelectItem>
+                      <SelectItem value="comfortable">Confortável</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </CardContent>
             </Card>
           </TabsContent>
 
-          {/* Company */}
-          <TabsContent value="empresa">
+          {/* Segurança */}
+          <TabsContent value="seguranca" className="space-y-4 mt-4">
             <Card>
-              <CardHeader>
-                <CardTitle>Dados da Empresa</CardTitle>
-                <CardDescription>
-                  Configurações da empresa e dados fiscais
-                </CardDescription>
+              <CardHeader className="pb-3">
+                <CardTitle>Alterar Senha</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label>Razão Social</Label>
-                    <Input defaultValue="ADUANEX Comércio Exterior LTDA" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Nome Fantasia</Label>
-                    <Input defaultValue="ADUANEX" />
-                  </div>
+              <CardContent className="space-y-4">
+                <div className="space-y-1.5">
+                  <Label className="text-xs">Senha Atual</Label>
+                  <Input type="password" className="h-9 max-w-sm" />
                 </div>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label>CNPJ</Label>
-                    <Input defaultValue="12.345.678/0001-90" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Inscrição Estadual</Label>
-                    <Input defaultValue="123.456.789.000" />
-                  </div>
+                <div className="space-y-1.5">
+                  <Label className="text-xs">Nova Senha</Label>
+                  <Input type="password" className="h-9 max-w-sm" />
                 </div>
-                <Separator />
-                <div className="space-y-4">
-                  <h4 className="font-medium">Integrações SISCOMEX</h4>
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <div className="space-y-2">
-                      <Label>Certificado Digital</Label>
-                      <Select defaultValue="a1">
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="a1">Tipo A1</SelectItem>
-                          <SelectItem value="a3">Tipo A3</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Validade do Certificado</Label>
-                      <Input type="date" defaultValue="2025-12-31" />
-                    </div>
-                  </div>
+                <div className="space-y-1.5">
+                  <Label className="text-xs">Confirmar Nova Senha</Label>
+                  <Input type="password" className="h-9 max-w-sm" />
                 </div>
-                <div className="flex justify-end">
-                  <Button className="bg-tech-blue hover:bg-tech-blue-dark">
-                    <Save className="w-4 h-4 mr-2" />
-                    Salvar Alterações
-                  </Button>
-                </div>
+                <Button size="sm">Alterar Senha</Button>
               </CardContent>
             </Card>
-          </TabsContent>
 
-          {/* Notifications */}
-          <TabsContent value="notificacoes">
             <Card>
-              <CardHeader>
-                <CardTitle>Preferências de Notificações</CardTitle>
-                <CardDescription>
-                  Configure como deseja receber alertas e notificações
-                </CardDescription>
+              <CardHeader className="pb-3">
+                <CardTitle>Autenticação em Dois Fatores</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <Label>Notificações por E-mail</Label>
-                      <p className="text-sm text-muted-foreground">
-                        Receba atualizações importantes por e-mail
-                      </p>
-                    </div>
-                    <Switch defaultChecked />
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium">2FA</p>
+                    <p className="text-xs text-muted-foreground">Adicione uma camada extra de segurança</p>
                   </div>
-                  <Separator />
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <Label>Alertas de Prazo</Label>
-                      <p className="text-sm text-muted-foreground">
-                        Notificações sobre vencimentos e prazos
-                      </p>
-                    </div>
-                    <Switch defaultChecked />
-                  </div>
-                  <Separator />
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <Label>Atualizações de Processo</Label>
-                      <p className="text-sm text-muted-foreground">
-                        Mudanças de status e eventos dos processos
-                      </p>
-                    </div>
-                    <Switch defaultChecked />
-                  </div>
-                  <Separator />
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <Label>Exigências SISCOMEX</Label>
-                      <p className="text-sm text-muted-foreground">
-                        Alertas sobre novas exigências
-                      </p>
-                    </div>
-                    <Switch defaultChecked />
-                  </div>
-                  <Separator />
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <Label>Relatórios Semanais</Label>
-                      <p className="text-sm text-muted-foreground">
-                        Resumo semanal das operações
-                      </p>
-                    </div>
-                    <Switch />
-                  </div>
+                  <Switch />
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
-
-          {/* Appearance */}
-          <TabsContent value="aparencia">
-            <Card>
-              <CardHeader>
-                <CardTitle>Aparência</CardTitle>
-                <CardDescription>
-                  Personalize a interface do sistema
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label>Tema</Label>
-                    <Select defaultValue="system">
-                      <SelectTrigger className="w-[200px]">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="light">Claro</SelectItem>
-                        <SelectItem value="dark">Escuro</SelectItem>
-                        <SelectItem value="system">Sistema</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <Separator />
-                  <div className="space-y-2">
-                    <Label>Idioma</Label>
-                    <Select defaultValue="pt-br">
-                      <SelectTrigger className="w-[200px]">
-                        <Globe className="w-4 h-4 mr-2" />
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="pt-br">Português (Brasil)</SelectItem>
-                        <SelectItem value="en">English</SelectItem>
-                        <SelectItem value="es">Español</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <Separator />
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <Label>Animações</Label>
-                      <p className="text-sm text-muted-foreground">
-                        Ativar animações de interface
-                      </p>
-                    </div>
-                    <Switch defaultChecked />
-                  </div>
-                  <Separator />
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <Label>Menu Compacto</Label>
-                      <p className="text-sm text-muted-foreground">
-                        Recolher sidebar automaticamente
-                      </p>
-                    </div>
-                    <Switch />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Security */}
-          <TabsContent value="seguranca">
-            <div className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Alterar Senha</CardTitle>
-                  <CardDescription>
-                    Mantenha sua conta segura atualizando sua senha regularmente
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2">
-                    <Label>Senha Atual</Label>
-                    <Input type="password" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Nova Senha</Label>
-                    <Input type="password" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Confirmar Nova Senha</Label>
-                    <Input type="password" />
-                  </div>
-                  <Button className="bg-tech-blue hover:bg-tech-blue-dark">
-                    Atualizar Senha
-                  </Button>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Autenticação em Duas Etapas</CardTitle>
-                  <CardDescription>
-                    Adicione uma camada extra de segurança à sua conta
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <p className="font-medium">Ativar 2FA</p>
-                      <p className="text-sm text-muted-foreground">
-                        Use um aplicativo autenticador para gerar códigos
-                      </p>
-                    </div>
-                    <Switch />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Sessões Ativas</CardTitle>
-                  <CardDescription>
-                    Gerencie os dispositivos conectados à sua conta
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between p-3 rounded-lg bg-secondary/50">
-                      <div className="flex items-center gap-3">
-                        <div className="w-2 h-2 rounded-full bg-success animate-pulse" />
-                        <div>
-                          <p className="font-medium text-sm">Chrome - Windows</p>
-                          <p className="text-xs text-muted-foreground">
-                            São Paulo, Brasil • Ativo agora
-                          </p>
-                        </div>
-                      </div>
-                      <Badge variant="outline" className="text-success border-success/30">
-                        Sessão Atual
-                      </Badge>
-                    </div>
-                    <div className="flex items-center justify-between p-3 rounded-lg bg-secondary/30">
-                      <div className="flex items-center gap-3">
-                        <div className="w-2 h-2 rounded-full bg-muted-foreground" />
-                        <div>
-                          <p className="font-medium text-sm">Safari - MacOS</p>
-                          <p className="text-xs text-muted-foreground">
-                            São Paulo, Brasil • Há 2 dias
-                          </p>
-                        </div>
-                      </div>
-                      <Button variant="ghost" size="sm" className="text-destructive">
-                        Encerrar
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
           </TabsContent>
         </Tabs>
       </div>
