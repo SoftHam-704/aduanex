@@ -89,9 +89,18 @@ const processes = [
   },
 ];
 
-const statusConfig: Record<string, { label: string; variant: "default" | "success" | "warning" | "destructive" }> = {
-  em_analise: { label: "Em Análise", variant: "default" },
-  registrada: { label: "Registrada", variant: "default" },
+// Fresh Corporate Palette
+const COLORS = {
+  green: "#10B981",
+  orange: "#FB923C",
+  blue: "#60A5FA",
+  yellow: "#EAB308",
+  red: "#DC2626",
+};
+
+const statusConfig: Record<string, { label: string; variant: "info" | "success" | "warning" | "destructive" }> = {
+  em_analise: { label: "Em Análise", variant: "info" },
+  registrada: { label: "Registrada", variant: "info" },
   averbada: { label: "Averbada", variant: "success" },
   aguardando_docs: { label: "Aguardando", variant: "warning" },
   cancelada: { label: "Cancelada", variant: "destructive" },
@@ -113,9 +122,9 @@ export function ExportProcesses() {
 
   const stats = [
     { label: "Total", value: 32, color: "text-foreground" },
-    { label: "Averbadas", value: 18, color: "text-success" },
-    { label: "Em Andamento", value: 12, color: "text-primary" },
-    { label: "Pendentes", value: 2, color: "text-warning" },
+    { label: "Averbadas", value: 18, color: `text-[${COLORS.green}]` },
+    { label: "Em Andamento", value: 12, color: `text-[${COLORS.blue}]` },
+    { label: "Pendentes", value: 2, color: `text-[${COLORS.orange}]` },
   ];
 
   return (
@@ -136,11 +145,11 @@ export function ExportProcesses() {
         </div>
 
         {/* Stats row */}
-        <div className="flex flex-wrap gap-6 py-3 px-4 bg-muted/30 rounded-lg">
+        <div className="flex flex-wrap gap-4 py-2 px-3 bg-muted/30 rounded-md text-xs">
           {stats.map((stat) => (
-            <div key={stat.label} className="flex items-baseline gap-2">
-              <span className={`text-xl font-semibold tabular-nums ${stat.color}`}>{stat.value}</span>
-              <span className="text-xs text-muted-foreground">{stat.label}</span>
+            <div key={stat.label} className="flex items-baseline gap-1.5">
+              <span className={`text-base font-semibold tabular-nums ${stat.color}`}>{stat.value}</span>
+              <span className="text-muted-foreground">{stat.label}</span>
             </div>
           ))}
         </div>
@@ -194,53 +203,53 @@ export function ExportProcesses() {
               </TableHeader>
               <TableBody>
                 {filteredProcesses.map((process) => (
-                  <TableRow key={process.id} className="cursor-pointer">
+                  <TableRow key={process.id} className="cursor-pointer text-xs">
                     <TableCell>
-                      <div className="flex items-center gap-3">
-                        <div className="w-7 h-7 rounded bg-success/10 flex items-center justify-center flex-shrink-0">
-                          <Plane className="w-3.5 h-3.5 text-success" />
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-6 rounded flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `${COLORS.green}15` }}>
+                          <Plane className="w-3 h-3" style={{ color: COLORS.green }} />
                         </div>
                         <div>
-                          <p className="text-sm font-medium font-mono">{process.id}</p>
+                          <p className="font-medium font-mono text-xs">{process.id}</p>
                           {process.dueNumber && (
-                            <p className="text-xs text-muted-foreground font-mono">DU-E {process.dueNumber}</p>
+                            <p className="text-[10px] text-muted-foreground font-mono">DU-E {process.dueNumber}</p>
                           )}
                         </div>
                       </div>
                     </TableCell>
                     <TableCell className="hidden md:table-cell">
-                      <p className="text-sm truncate max-w-[180px]">{process.client}</p>
+                      <p className="text-xs truncate max-w-[160px]">{process.client}</p>
                     </TableCell>
                     <TableCell className="hidden lg:table-cell">
-                      <p className="text-sm">{process.destination}</p>
+                      <p className="text-xs">{process.destination}</p>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={statusConfig[process.status]?.variant || "default"}>
+                      <Badge variant={statusConfig[process.status]?.variant || "default"} className="text-[10px] px-1.5 py-0">
                         {statusConfig[process.status]?.label}
                       </Badge>
                     </TableCell>
                     <TableCell className="hidden lg:table-cell text-right">
-                      <span className="text-sm font-medium tabular-nums">{process.valueBrl}</span>
+                      <span className="text-xs font-medium tabular-nums">{process.valueBrl}</span>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="w-8">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon-sm">
-                            <MoreHorizontal className="w-4 h-4" />
+                          <Button variant="ghost" size="icon-sm" className="h-6 w-6">
+                            <MoreHorizontal className="w-3.5 h-3.5" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem className="text-sm">
-                            <Eye className="w-4 h-4 mr-2" />
+                          <DropdownMenuItem className="text-xs">
+                            <Eye className="w-3.5 h-3.5 mr-1.5" />
                             Visualizar
                           </DropdownMenuItem>
-                          <DropdownMenuItem className="text-sm">
-                            <Edit className="w-4 h-4 mr-2" />
+                          <DropdownMenuItem className="text-xs">
+                            <Edit className="w-3.5 h-3.5 mr-1.5" />
                             Editar
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
-                          <DropdownMenuItem className="text-destructive text-sm">
-                            <Trash2 className="w-4 h-4 mr-2" />
+                          <DropdownMenuItem className="text-destructive text-xs">
+                            <Trash2 className="w-3.5 h-3.5 mr-1.5" />
                             Excluir
                           </DropdownMenuItem>
                         </DropdownMenuContent>

@@ -27,7 +27,7 @@ export function Header({ onMobileMenuToggle, darkMode, onToggleDarkMode }: Heade
   const [showSearch, setShowSearch] = useState(false);
 
   return (
-    <header className="sticky top-0 z-30 h-14 flex items-center justify-between gap-4 px-4 lg:px-6 bg-background border-b border-border">
+    <header className="sticky top-0 z-30 h-14 flex items-center justify-between gap-4 px-4 lg:px-6 bg-white dark:bg-[#1E293B] border-b border-[#E2E8F0] dark:border-[#334155]">
       {/* Left side */}
       <div className="flex items-center gap-3">
         <Button
@@ -44,7 +44,7 @@ export function Header({ onMobileMenuToggle, darkMode, onToggleDarkMode }: Heade
           <Search className="absolute left-3 w-4 h-4 text-muted-foreground" />
           <Input
             placeholder="Buscar processos..."
-            className="pl-9 w-72 h-8 text-sm bg-muted border-0"
+            className="pl-9 w-72 h-8 text-sm bg-[#F1F5F9] dark:bg-[#334155] border-0"
           />
           <kbd className="absolute right-2.5 pointer-events-none hidden lg:inline-flex h-5 select-none items-center gap-0.5 rounded border bg-background px-1.5 font-mono text-[10px] text-muted-foreground">
             <span className="text-xs">⌘</span>K
@@ -135,7 +135,7 @@ export function Header({ onMobileMenuToggle, darkMode, onToggleDarkMode }: Heade
 
       {/* Mobile search bar */}
       {showSearch && (
-        <div className="absolute top-full left-0 right-0 p-3 bg-background border-b border-border md:hidden">
+        <div className="absolute top-full left-0 right-0 p-3 bg-white dark:bg-[#1E293B] border-b border-[#E2E8F0] dark:border-[#334155] md:hidden">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input

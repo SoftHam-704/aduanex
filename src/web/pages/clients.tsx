@@ -388,6 +388,15 @@ const incoterms = ["EXW", "FCA", "FAS", "FOB", "CFR", "CIF", "CPT", "CIP", "DAP"
 // Payment conditions
 const paymentConditions = ["À Vista", "Antecipado", "30/60/90", "T/T", "Carta de Crédito", "Cobrança Documentária"];
 
+// Fresh Corporate Palette
+const COLORS = {
+  green: "#10B981",
+  orange: "#FB923C",
+  blue: "#60A5FA",
+  yellow: "#EAB308",
+  red: "#DC2626",
+};
+
 export function Clients() {
   const [clients, setClients] = useState<Client[]>(initialClients);
   const [searchTerm, setSearchTerm] = useState("");
@@ -416,9 +425,9 @@ export function Clients() {
 
   // Stats
   const stats = [
-    { label: "Ativos", value: clients.filter((c) => c.status === "ativo").length, color: "text-success" },
+    { label: "Ativos", value: clients.filter((c) => c.status === "ativo").length, color: `text-[${COLORS.green}]` },
     { label: "Inativos", value: clients.filter((c) => c.status === "inativo").length, color: "text-muted-foreground" },
-    { label: "Total", value: clients.length, color: "text-primary" },
+    { label: "Total", value: clients.length, color: `text-[${COLORS.blue}]` },
   ];
 
   // Unique countries for filter
@@ -1041,11 +1050,11 @@ export function Clients() {
         </div>
 
         {/* Stats row */}
-        <div className="flex flex-wrap gap-6 py-3 px-4 bg-muted/30 rounded-lg">
+        <div className="flex flex-wrap gap-4 py-2 px-3 bg-muted/30 rounded-md text-xs">
           {stats.map((stat) => (
-            <div key={stat.label} className="flex items-baseline gap-2">
-              <span className={`text-xl font-semibold tabular-nums ${stat.color}`}>{stat.value}</span>
-              <span className="text-xs text-muted-foreground">{stat.label}</span>
+            <div key={stat.label} className="flex items-baseline gap-1.5">
+              <span className={`text-base font-semibold tabular-nums ${stat.color}`}>{stat.value}</span>
+              <span className="text-muted-foreground">{stat.label}</span>
             </div>
           ))}
         </div>
@@ -1102,62 +1111,62 @@ export function Clients() {
               <TableBody>
                 {filteredClients.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                    <TableCell colSpan={7} className="text-center py-6 text-muted-foreground text-xs">
                       Nenhum cliente encontrado
                     </TableCell>
                   </TableRow>
                 ) : (
                   filteredClients.map((client) => (
-                    <TableRow key={client.id} className="cursor-pointer" onClick={() => handleView(client)}>
+                    <TableRow key={client.id} className="cursor-pointer text-xs" onClick={() => handleView(client)}>
                       <TableCell>
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded bg-primary/10 flex items-center justify-center flex-shrink-0">
-                            <span className="text-xs font-medium text-primary">{getInitials(client.razaoSocial)}</span>
+                        <div className="flex items-center gap-2">
+                          <div className="w-6 h-6 rounded bg-[#10B981]/10 flex items-center justify-center flex-shrink-0">
+                            <span className="text-[10px] font-medium text-[#10B981]">{getInitials(client.razaoSocial)}</span>
                           </div>
                           <div className="min-w-0">
-                            <p className="text-sm font-medium truncate max-w-[180px]">{client.razaoSocial}</p>
+                            <p className="text-xs font-medium truncate max-w-[160px]">{client.razaoSocial}</p>
                             {client.nomeFantasia && (
-                              <p className="text-xs text-muted-foreground truncate max-w-[180px]">{client.nomeFantasia}</p>
+                              <p className="text-[10px] text-muted-foreground truncate max-w-[160px]">{client.nomeFantasia}</p>
                             )}
                           </div>
                         </div>
                       </TableCell>
                       <TableCell className="hidden md:table-cell">
-                        <span className="text-sm font-mono text-muted-foreground">{client.cnpjCpf}</span>
+                        <span className="text-xs font-mono text-muted-foreground">{client.cnpjCpf}</span>
                       </TableCell>
                       <TableCell className="hidden lg:table-cell">
-                        <span className="text-sm">{client.pais}</span>
+                        <span className="text-xs">{client.pais}</span>
                       </TableCell>
                       <TableCell className="hidden lg:table-cell">
-                        <span className="text-sm font-mono">{client.condicoesComerciais.moedaPadrao}</span>
+                        <span className="text-xs font-mono">{client.condicoesComerciais.moedaPadrao}</span>
                       </TableCell>
                       <TableCell className="hidden md:table-cell">
-                        <span className="text-sm text-muted-foreground">{formatDate(client.dataCadastro)}</span>
+                        <span className="text-xs text-muted-foreground">{formatDate(client.dataCadastro)}</span>
                       </TableCell>
                       <TableCell>
-                        <Badge variant={client.status === "ativo" ? "success" : "secondary"}>
+                        <Badge variant={client.status === "ativo" ? "success" : "secondary"} className="text-[10px] px-1.5 py-0">
                           {client.status === "ativo" ? "Ativo" : "Inativo"}
                         </Badge>
                       </TableCell>
-                      <TableCell onClick={(e) => e.stopPropagation()}>
+                      <TableCell onClick={(e) => e.stopPropagation()} className="w-8">
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon-sm">
-                              <MoreHorizontal className="w-4 h-4" />
+                            <Button variant="ghost" size="icon-sm" className="h-6 w-6">
+                              <MoreHorizontal className="w-3.5 h-3.5" />
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem className="text-sm" onClick={() => handleView(client)}>
-                              <Eye className="w-4 h-4 mr-2" />
+                            <DropdownMenuItem className="text-xs" onClick={() => handleView(client)}>
+                              <Eye className="w-3.5 h-3.5 mr-1.5" />
                               Visualizar
                             </DropdownMenuItem>
-                            <DropdownMenuItem className="text-sm" onClick={() => handleEdit(client)}>
-                              <Edit className="w-4 h-4 mr-2" />
+                            <DropdownMenuItem className="text-xs" onClick={() => handleEdit(client)}>
+                              <Edit className="w-3.5 h-3.5 mr-1.5" />
                               Editar
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem className="text-destructive text-sm" onClick={() => handleDelete(client)}>
-                              <Trash2 className="w-4 h-4 mr-2" />
+                            <DropdownMenuItem className="text-destructive text-xs" onClick={() => handleDelete(client)}>
+                              <Trash2 className="w-3.5 h-3.5 mr-1.5" />
                               Excluir
                             </DropdownMenuItem>
                           </DropdownMenuContent>

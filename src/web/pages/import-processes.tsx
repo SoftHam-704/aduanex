@@ -155,19 +155,28 @@ const processes = [
   },
 ];
 
-const statusConfig: Record<string, { label: string; variant: "default" | "success" | "warning" | "destructive" | "info" }> = {
-  em_analise: { label: "Em Análise", variant: "default" },
+// Fresh Corporate Palette
+const COLORS = {
+  green: "#10B981",
+  orange: "#FB923C",
+  blue: "#60A5FA",
+  yellow: "#EAB308",
+  red: "#DC2626",
+};
+
+const statusConfig: Record<string, { label: string; variant: "info" | "success" | "warning" | "destructive" | "attention" }> = {
+  em_analise: { label: "Em Análise", variant: "info" },
   desembaracado: { label: "Liberado", variant: "success" },
   aguardando_docs: { label: "Aguardando", variant: "warning" },
   canal_vermelho: { label: "Canal Vermelho", variant: "destructive" },
-  exigencia: { label: "Exigência", variant: "warning" },
+  exigencia: { label: "Exigência", variant: "attention" },
   transito: { label: "Trânsito", variant: "info" },
 };
 
 const channelConfig: Record<string, { label: string; color: string }> = {
-  verde: { label: "Verde", color: "text-success" },
-  amarelo: { label: "Amarelo", color: "text-warning" },
-  vermelho: { label: "Vermelho", color: "text-destructive" },
+  verde: { label: "Verde", color: `text-[${COLORS.green}]` },
+  amarelo: { label: "Amarelo", color: `text-[${COLORS.yellow}]` },
+  vermelho: { label: "Vermelho", color: `text-[${COLORS.red}]` },
 };
 
 export function ImportProcesses() {
@@ -176,7 +185,7 @@ export function ImportProcesses() {
   const [portFilter, setPortFilter] = useState<string>("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const itemsPerPage = 10;
+  const itemsPerPage = 20;
 
   const filteredProcesses = processes.filter((process) => {
     const matchesSearch =
@@ -211,9 +220,9 @@ export function ImportProcesses() {
 
   const stats = [
     { label: "Total", value: 127, color: "text-foreground" },
-    { label: "Liberados", value: 48, color: "text-success" },
-    { label: "Em Andamento", value: 72, color: "text-primary" },
-    { label: "Exigências", value: 7, color: "text-destructive" },
+    { label: "Liberados", value: 48, color: `text-[${COLORS.green}]` },
+    { label: "Em Andamento", value: 72, color: `text-[${COLORS.blue}]` },
+    { label: "Exigências", value: 7, color: `text-[${COLORS.red}]` },
   ];
 
   return (
@@ -236,11 +245,11 @@ export function ImportProcesses() {
         </div>
 
         {/* Stats - compact row */}
-        <div className="flex flex-wrap gap-6 py-3 px-4 bg-muted/30 rounded-lg">
+        <div className="flex flex-wrap gap-4 py-2 px-3 bg-muted/30 rounded-md text-xs">
           {stats.map((stat) => (
-            <div key={stat.label} className="flex items-baseline gap-2">
-              <span className={`text-xl font-semibold tabular-nums ${stat.color}`}>{stat.value}</span>
-              <span className="text-xs text-muted-foreground">{stat.label}</span>
+            <div key={stat.label} className="flex items-baseline gap-1.5">
+              <span className={`text-base font-semibold tabular-nums ${stat.color}`}>{stat.value}</span>
+              <span className="text-muted-foreground">{stat.label}</span>
             </div>
           ))}
         </div>
@@ -420,69 +429,69 @@ export function ImportProcesses() {
                   <TableRow
                     key={process.id}
                     className={cn(
-                      "cursor-pointer",
+                      "cursor-pointer text-xs",
                       selectedRows.includes(process.id) && "bg-primary/5"
                     )}
                   >
-                    <TableCell>
+                    <TableCell className="w-8">
                       <input
                         type="checkbox"
-                        className="rounded border-input w-4 h-4"
+                        className="rounded border-input w-3.5 h-3.5"
                         checked={selectedRows.includes(process.id)}
                         onChange={() => toggleRowSelection(process.id)}
                         onClick={(e) => e.stopPropagation()}
                       />
                     </TableCell>
                     <TableCell>
-                      <div>
-                        <p className="font-medium text-sm font-mono">{process.id}</p>
+                      <div className="space-y-0">
+                        <p className="font-medium font-mono text-xs">{process.id}</p>
                         {process.diNumber && (
-                          <p className="text-xs text-muted-foreground font-mono">DI {process.diNumber}</p>
+                          <p className="text-[10px] text-muted-foreground font-mono">DI {process.diNumber}</p>
                         )}
                       </div>
                     </TableCell>
                     <TableCell className="hidden md:table-cell">
-                      <p className="text-sm truncate max-w-[180px]">{process.client}</p>
+                      <p className="text-xs truncate max-w-[160px]">{process.client}</p>
                     </TableCell>
                     <TableCell className="hidden lg:table-cell">
-                      <p className="text-sm">{process.origin}</p>
+                      <p className="text-xs">{process.origin}</p>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={statusConfig[process.status]?.variant || "default"}>
+                      <Badge variant={statusConfig[process.status]?.variant || "default"} className="text-[10px] px-1.5 py-0">
                         {statusConfig[process.status]?.label}
                       </Badge>
                     </TableCell>
                     <TableCell className="hidden md:table-cell">
                       {process.channel ? (
-                        <span className={`text-sm font-medium ${channelConfig[process.channel]?.color}`}>
+                        <span className={`text-xs font-medium ${channelConfig[process.channel]?.color}`}>
                           {channelConfig[process.channel]?.label}
                         </span>
                       ) : (
-                        <span className="text-sm text-muted-foreground">—</span>
+                        <span className="text-xs text-muted-foreground">—</span>
                       )}
                     </TableCell>
                     <TableCell className="hidden lg:table-cell text-right">
-                      <span className="text-sm font-medium tabular-nums">{process.valueBrl}</span>
+                      <span className="text-xs font-medium tabular-nums">{process.valueBrl}</span>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="w-8">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon-sm" className="h-8 w-8">
-                            <MoreHorizontal className="w-4 h-4" />
+                          <Button variant="ghost" size="icon-sm" className="h-6 w-6">
+                            <MoreHorizontal className="w-3.5 h-3.5" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem className="text-sm">
-                            <Eye className="w-4 h-4 mr-2" />
+                          <DropdownMenuItem className="text-xs">
+                            <Eye className="w-3.5 h-3.5 mr-1.5" />
                             Visualizar
                           </DropdownMenuItem>
-                          <DropdownMenuItem className="text-sm">
-                            <Edit className="w-4 h-4 mr-2" />
+                          <DropdownMenuItem className="text-xs">
+                            <Edit className="w-3.5 h-3.5 mr-1.5" />
                             Editar
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
-                          <DropdownMenuItem className="text-destructive text-sm">
-                            <Trash2 className="w-4 h-4 mr-2" />
+                          <DropdownMenuItem className="text-destructive text-xs">
+                            <Trash2 className="w-3.5 h-3.5 mr-1.5" />
                             Excluir
                           </DropdownMenuItem>
                         </DropdownMenuContent>

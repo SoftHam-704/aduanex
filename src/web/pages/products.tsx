@@ -98,6 +98,15 @@ const products = [
   },
 ];
 
+// Fresh Corporate Palette
+const COLORS = {
+  green: "#10B981",
+  orange: "#FB923C",
+  blue: "#60A5FA",
+  yellow: "#EAB308",
+  red: "#DC2626",
+};
+
 export function Products() {
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -108,8 +117,8 @@ export function Products() {
 
   const stats = [
     { label: "Cadastrados", value: products.length, color: "text-foreground" },
-    { label: "Ativos", value: products.filter((p) => p.status === "ativo").length, color: "text-success" },
-    { label: "Categorias", value: 4, color: "text-primary" },
+    { label: "Ativos", value: products.filter((p) => p.status === "ativo").length, color: `text-[${COLORS.green}]` },
+    { label: "Categorias", value: 4, color: `text-[${COLORS.blue}]` },
   ];
 
   return (
@@ -176,11 +185,11 @@ export function Products() {
         </div>
 
         {/* Stats row */}
-        <div className="flex flex-wrap gap-6 py-3 px-4 bg-muted/30 rounded-lg">
+        <div className="flex flex-wrap gap-4 py-2 px-3 bg-muted/30 rounded-md text-xs">
           {stats.map((stat) => (
-            <div key={stat.label} className="flex items-baseline gap-2">
-              <span className={`text-xl font-semibold tabular-nums ${stat.color}`}>{stat.value}</span>
-              <span className="text-xs text-muted-foreground">{stat.label}</span>
+            <div key={stat.label} className="flex items-baseline gap-1.5">
+              <span className={`text-base font-semibold tabular-nums ${stat.color}`}>{stat.value}</span>
+              <span className="text-muted-foreground">{stat.label}</span>
             </div>
           ))}
         </div>
@@ -214,49 +223,49 @@ export function Products() {
               </TableHeader>
               <TableBody>
                 {filteredProducts.map((product) => (
-                  <TableRow key={product.id} className="cursor-pointer">
+                  <TableRow key={product.id} className="cursor-pointer text-xs">
                     <TableCell>
-                      <span className="text-sm font-medium font-mono">{product.ncm}</span>
+                      <span className="font-medium font-mono text-xs">{product.ncm}</span>
                     </TableCell>
                     <TableCell>
-                      <p className="text-sm truncate max-w-[250px]">{product.description}</p>
+                      <p className="text-xs truncate max-w-[220px]">{product.description}</p>
                     </TableCell>
                     <TableCell className="hidden md:table-cell">
-                      <span className="text-sm text-muted-foreground">{product.category}</span>
+                      <span className="text-xs text-muted-foreground">{product.category}</span>
                     </TableCell>
                     <TableCell className="hidden lg:table-cell text-right">
-                      <span className="text-sm tabular-nums">{product.ii}%</span>
+                      <span className="text-xs tabular-nums">{product.ii}%</span>
                     </TableCell>
                     <TableCell className="hidden lg:table-cell text-right">
-                      <span className="text-sm tabular-nums">{product.ipi}%</span>
+                      <span className="text-xs tabular-nums">{product.ipi}%</span>
                     </TableCell>
                     <TableCell className="text-right">
-                      <span className="text-sm font-medium tabular-nums">{product.usageCount}</span>
+                      <span className="text-xs font-medium tabular-nums">{product.usageCount}</span>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={product.status === "ativo" ? "success" : "secondary"}>
+                      <Badge variant={product.status === "ativo" ? "success" : "secondary"} className="text-[10px] px-1.5 py-0">
                         {product.status === "ativo" ? "Ativo" : "Inativo"}
                       </Badge>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="w-8">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon-sm">
-                            <MoreHorizontal className="w-4 h-4" />
+                          <Button variant="ghost" size="icon-sm" className="h-6 w-6">
+                            <MoreHorizontal className="w-3.5 h-3.5" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem className="text-sm">
-                            <Eye className="w-4 h-4 mr-2" />
+                          <DropdownMenuItem className="text-xs">
+                            <Eye className="w-3.5 h-3.5 mr-1.5" />
                             Visualizar
                           </DropdownMenuItem>
-                          <DropdownMenuItem className="text-sm">
-                            <Edit className="w-4 h-4 mr-2" />
+                          <DropdownMenuItem className="text-xs">
+                            <Edit className="w-3.5 h-3.5 mr-1.5" />
                             Editar
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
-                          <DropdownMenuItem className="text-destructive text-sm">
-                            <Trash2 className="w-4 h-4 mr-2" />
+                          <DropdownMenuItem className="text-destructive text-xs">
+                            <Trash2 className="w-3.5 h-3.5 mr-1.5" />
                             Excluir
                           </DropdownMenuItem>
                         </DropdownMenuContent>

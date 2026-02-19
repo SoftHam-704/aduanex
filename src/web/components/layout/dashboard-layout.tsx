@@ -29,7 +29,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
   return (
     <TooltipProvider>
-      <div className="flex h-screen overflow-hidden bg-background">
+      <div className="flex h-screen overflow-hidden bg-[#F8FAFC] dark:bg-[#0F172A]">
         <Sidebar
           collapsed={sidebarCollapsed}
           onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
@@ -45,7 +45,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           />
           
           <main className={cn(
-            "flex-1 overflow-auto p-4 lg:p-6",
+            "flex-1 overflow-auto p-4 lg:p-6 bg-[#F8FAFC] dark:bg-[#0F172A]",
             "transition-all duration-300"
           )}>
             {children}

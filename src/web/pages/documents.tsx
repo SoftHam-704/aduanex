@@ -111,19 +111,28 @@ const documents = [
   },
 ];
 
-const statusConfig: Record<string, { label: string; variant: "default" | "success" | "warning" | "destructive" }> = {
-  registrada: { label: "Registrada", variant: "default" },
+// Fresh Corporate Palette
+const COLORS = {
+  green: "#10B981",
+  orange: "#FB923C",
+  blue: "#60A5FA",
+  yellow: "#EAB308",
+  red: "#DC2626",
+};
+
+const statusConfig: Record<string, { label: string; variant: "info" | "success" | "warning" | "destructive" }> = {
+  registrada: { label: "Registrada", variant: "info" },
   desembaracada: { label: "Liberada", variant: "success" },
   em_exigencia: { label: "Exigência", variant: "warning" },
   cancelada: { label: "Cancelada", variant: "destructive" },
   averbada: { label: "Averbada", variant: "success" },
-  em_analise: { label: "Em Análise", variant: "default" },
+  em_analise: { label: "Em Análise", variant: "info" },
 };
 
 const channelConfig: Record<string, { label: string; color: string }> = {
-  verde: { label: "Verde", color: "text-success" },
-  amarelo: { label: "Amarelo", color: "text-warning" },
-  vermelho: { label: "Vermelho", color: "text-destructive" },
+  verde: { label: "Verde", color: `text-[${COLORS.green}]` },
+  amarelo: { label: "Amarelo", color: `text-[${COLORS.yellow}]` },
+  vermelho: { label: "Vermelho", color: `text-[${COLORS.red}]` },
 };
 
 export function Documents() {
@@ -146,10 +155,10 @@ export function Documents() {
   });
 
   const stats = [
-    { label: "DI", value: documents.filter((d) => d.type === "DI").length, color: "text-primary" },
-    { label: "DU-E", value: documents.filter((d) => d.type === "DU-E").length, color: "text-success" },
-    { label: "DUIMP", value: documents.filter((d) => d.type === "DUIMP").length, color: "text-info" },
-    { label: "Exigências", value: documents.filter((d) => d.status === "em_exigencia").length, color: "text-warning" },
+    { label: "DI", value: documents.filter((d) => d.type === "DI").length, color: `text-[${COLORS.blue}]` },
+    { label: "DU-E", value: documents.filter((d) => d.type === "DU-E").length, color: `text-[${COLORS.green}]` },
+    { label: "DUIMP", value: documents.filter((d) => d.type === "DUIMP").length, color: `text-[${COLORS.orange}]` },
+    { label: "Exigências", value: documents.filter((d) => d.status === "em_exigencia").length, color: `text-[${COLORS.yellow}]` },
   ];
 
   return (
@@ -218,11 +227,11 @@ export function Documents() {
         </div>
 
         {/* Stats row */}
-        <div className="flex flex-wrap gap-6 py-3 px-4 bg-muted/30 rounded-lg">
+        <div className="flex flex-wrap gap-4 py-2 px-3 bg-muted/30 rounded-md text-xs">
           {stats.map((stat) => (
-            <div key={stat.label} className="flex items-baseline gap-2">
-              <span className={`text-xl font-semibold tabular-nums ${stat.color}`}>{stat.value}</span>
-              <span className="text-xs text-muted-foreground">{stat.label}</span>
+            <div key={stat.label} className="flex items-baseline gap-1.5">
+              <span className={`text-base font-semibold tabular-nums ${stat.color}`}>{stat.value}</span>
+              <span className="text-muted-foreground">{stat.label}</span>
             </div>
           ))}
         </div>
@@ -281,58 +290,58 @@ export function Documents() {
               </TableHeader>
               <TableBody>
                 {filteredDocuments.map((doc) => (
-                  <TableRow key={doc.id} className="cursor-pointer">
+                  <TableRow key={doc.id} className="cursor-pointer text-xs">
                     <TableCell>
                       <div className="flex items-center gap-2">
-                        <FileText className="w-4 h-4 text-muted-foreground" />
+                        <FileText className="w-3.5 h-3.5 text-muted-foreground" />
                         <div>
-                          <p className="text-sm font-medium font-mono">{doc.number}</p>
-                          <p className="text-xs text-muted-foreground">{doc.type}</p>
+                          <p className="font-medium font-mono text-xs">{doc.number}</p>
+                          <p className="text-[10px] text-muted-foreground">{doc.type}</p>
                         </div>
                       </div>
                     </TableCell>
                     <TableCell className="hidden md:table-cell">
-                      <span className="text-sm font-mono">{doc.process}</span>
+                      <span className="font-mono text-xs">{doc.process}</span>
                     </TableCell>
                     <TableCell className="hidden lg:table-cell">
-                      <span className="text-sm truncate max-w-[160px]">{doc.client}</span>
+                      <span className="text-xs truncate max-w-[140px]">{doc.client}</span>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={statusConfig[doc.status]?.variant || "default"}>
+                      <Badge variant={statusConfig[doc.status]?.variant || "default"} className="text-[10px] px-1.5 py-0">
                         {statusConfig[doc.status]?.label}
                       </Badge>
                     </TableCell>
                     <TableCell className="hidden md:table-cell">
                       {doc.channel ? (
-                        <span className={`text-sm font-medium ${channelConfig[doc.channel]?.color}`}>
+                        <span className={`text-xs font-medium ${channelConfig[doc.channel]?.color}`}>
                           {channelConfig[doc.channel]?.label}
                         </span>
                       ) : (
-                        <span className="text-sm text-muted-foreground">—</span>
+                        <span className="text-xs text-muted-foreground">—</span>
                       )}
                     </TableCell>
                     <TableCell className="hidden lg:table-cell">
-                      <span className="text-sm text-muted-foreground">{doc.date}</span>
+                      <span className="text-xs text-muted-foreground">{doc.date}</span>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="w-8">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon-sm">
-                            <MoreHorizontal className="w-4 h-4" />
+                          <Button variant="ghost" size="icon-sm" className="h-6 w-6">
+                            <MoreHorizontal className="w-3.5 h-3.5" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem className="text-sm">
-                            <Eye className="w-4 h-4 mr-2" />
+                          <DropdownMenuItem className="text-xs">
+                            <Eye className="w-3.5 h-3.5 mr-1.5" />
                             Visualizar
                           </DropdownMenuItem>
-                          <DropdownMenuItem className="text-sm">
-                            <Download className="w-4 h-4 mr-2" />
+                          <DropdownMenuItem className="text-xs">
+                            <Download className="w-3.5 h-3.5 mr-1.5" />
                             Download
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
-                          <DropdownMenuItem className="text-destructive text-sm">
-                            <Trash2 className="w-4 h-4 mr-2" />
+                          <DropdownMenuItem className="text-destructive text-xs">
+                            <Trash2 className="w-3.5 h-3.5 mr-1.5" />
                             Excluir
                           </DropdownMenuItem>
                         </DropdownMenuContent>

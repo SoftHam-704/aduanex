@@ -41,6 +41,15 @@ import {
   Area,
 } from "recharts";
 
+// Fresh Corporate Palette
+const COLORS = {
+  green: "#10B981",
+  orange: "#FB923C",
+  blue: "#60A5FA",
+  yellow: "#EAB308",
+  red: "#DC2626",
+};
+
 // Mock data
 const metrics = [
   {
@@ -49,6 +58,7 @@ const metrics = [
     change: "+12%",
     trend: "up" as const,
     description: "vs. mês anterior",
+    borderColor: "border-t-[#10B981]",
   },
   {
     title: "DIs Registradas",
@@ -56,6 +66,7 @@ const metrics = [
     change: "+8%",
     trend: "up" as const,
     description: "este mês",
+    borderColor: "border-t-[#60A5FA]",
   },
   {
     title: "DU-Es Emitidas",
@@ -63,6 +74,7 @@ const metrics = [
     change: "-3%",
     trend: "down" as const,
     description: "este mês",
+    borderColor: "border-t-[#FB923C]",
   },
   {
     title: "Alertas",
@@ -71,6 +83,7 @@ const metrics = [
     trend: "up" as const,
     description: "pendentes",
     isAlert: true,
+    borderColor: "border-t-[#EAB308]",
   },
 ];
 
@@ -93,10 +106,10 @@ const trendData = [
 ];
 
 const statusData = [
-  { name: "Desembaraçado", value: 45, color: "#059669" },
-  { name: "Em Análise", value: 30, color: "#2563EB" },
-  { name: "Aguardando", value: 15, color: "#D97706" },
-  { name: "Canal Vermelho", value: 10, color: "#DC2626" },
+  { name: "Desembaraçado", value: 45, color: COLORS.green },
+  { name: "Em Análise", value: 30, color: COLORS.blue },
+  { name: "Aguardando", value: 15, color: COLORS.orange },
+  { name: "Canal Vermelho", value: 10, color: COLORS.red },
 ];
 
 const recentProcesses = [
@@ -165,8 +178,9 @@ const timeline = [
   },
 ];
 
-const statusConfig: Record<string, { label: string; variant: "default" | "success" | "warning" | "destructive" }> = {
-  em_analise: { label: "Em Análise", variant: "default" },
+// Updated status config with new color variants
+const statusConfig: Record<string, { label: string; variant: "info" | "success" | "warning" | "destructive" }> = {
+  em_analise: { label: "Em Análise", variant: "info" },
   desembaracado: { label: "Liberado", variant: "success" },
   aguardando_docs: { label: "Aguardando", variant: "warning" },
   canal_vermelho: { label: "Canal Vermelho", variant: "destructive" },
@@ -175,11 +189,11 @@ const statusConfig: Record<string, { label: string; variant: "default" | "succes
 const chartConfig = {
   importacao: {
     label: "Importação",
-    color: "#2563EB",
+    color: COLORS.blue,
   },
   exportacao: {
     label: "Exportação",
-    color: "#059669",
+    color: COLORS.green,
   },
 };
 
@@ -211,10 +225,10 @@ export function Dashboard() {
           </Select>
         </div>
 
-        {/* Metrics - asymmetric grid */}
+        {/* Metrics with colored top border */}
         <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
           {metrics.map((metric) => (
-            <Card key={metric.title} className={metric.isAlert ? "border-warning/30 bg-warning/5" : ""}>
+            <Card key={metric.title} className={`border-t-3 ${metric.borderColor}`}>
               <CardContent className="pt-4 pb-4">
                 <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">
                   {metric.title}
@@ -223,10 +237,10 @@ export function Dashboard() {
                   <span className="text-2xl font-semibold tabular-nums">{metric.value}</span>
                   <span className={`text-xs font-medium ${
                     metric.isAlert 
-                      ? "text-warning" 
+                      ? "text-[#EAB308]" 
                       : metric.trend === "up" 
-                        ? "text-success" 
-                        : "text-destructive"
+                        ? "text-[#10B981]" 
+                        : "text-[#DC2626]"
                   }`}>
                     {metric.change}
                   </span>
@@ -262,17 +276,17 @@ export function Dashboard() {
                     width={30}
                   />
                   <ChartTooltip content={<ChartTooltipContent />} />
-                  <Bar dataKey="importacao" fill="#2563EB" radius={[2, 2, 0, 0]} />
-                  <Bar dataKey="exportacao" fill="#059669" radius={[2, 2, 0, 0]} />
+                  <Bar dataKey="importacao" fill={COLORS.blue} radius={[2, 2, 0, 0]} />
+                  <Bar dataKey="exportacao" fill={COLORS.green} radius={[2, 2, 0, 0]} />
                 </BarChart>
               </ChartContainer>
               <div className="flex justify-center gap-6 mt-2">
                 <div className="flex items-center gap-1.5">
-                  <div className="w-2.5 h-2.5 rounded-sm bg-[#2563EB]" />
+                  <div className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: COLORS.blue }} />
                   <span className="text-xs text-muted-foreground">Importação</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <div className="w-2.5 h-2.5 rounded-sm bg-[#059669]" />
+                  <div className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: COLORS.green }} />
                   <span className="text-xs text-muted-foreground">Exportação</span>
                 </div>
               </div>
@@ -284,7 +298,7 @@ export function Dashboard() {
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
                 <CardTitle>Processos Concluídos</CardTitle>
-                <div className="flex items-center gap-1 text-success">
+                <div className="flex items-center gap-1" style={{ color: COLORS.green }}>
                   <TrendingUp className="w-3.5 h-3.5" />
                   <span className="text-xs font-medium">+12.8%</span>
                 </div>
@@ -295,8 +309,8 @@ export function Dashboard() {
                 <AreaChart data={trendData}>
                   <defs>
                     <linearGradient id="fillValue" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#2563EB" stopOpacity={0.15} />
-                      <stop offset="95%" stopColor="#2563EB" stopOpacity={0} />
+                      <stop offset="5%" stopColor={COLORS.green} stopOpacity={0.15} />
+                      <stop offset="95%" stopColor={COLORS.green} stopOpacity={0} />
                     </linearGradient>
                   </defs>
                   <XAxis
@@ -315,7 +329,7 @@ export function Dashboard() {
                   <Area
                     type="monotone"
                     dataKey="value"
-                    stroke="#2563EB"
+                    stroke={COLORS.green}
                     strokeWidth={1.5}
                     fill="url(#fillValue)"
                   />
@@ -395,13 +409,18 @@ export function Dashboard() {
                     className="flex items-center justify-between py-2.5 first:pt-0 last:pb-0"
                   >
                     <div className="flex items-center gap-3 min-w-0">
-                      <div className={`w-7 h-7 rounded flex items-center justify-center flex-shrink-0 ${
-                        process.type === "importacao" ? "bg-primary/10" : "bg-success/10"
-                      }`}>
+                      <div 
+                        className="w-7 h-7 rounded flex items-center justify-center flex-shrink-0"
+                        style={{ 
+                          backgroundColor: process.type === "importacao" 
+                            ? `${COLORS.blue}15` 
+                            : `${COLORS.green}15` 
+                        }}
+                      >
                         {process.type === "importacao" ? (
-                          <Ship className="w-3.5 h-3.5 text-primary" />
+                          <Ship className="w-3.5 h-3.5" style={{ color: COLORS.blue }} />
                         ) : (
-                          <Plane className="w-3.5 h-3.5 text-success" />
+                          <Plane className="w-3.5 h-3.5" style={{ color: COLORS.green }} />
                         )}
                       </div>
                       <div className="min-w-0">
@@ -431,34 +450,39 @@ export function Dashboard() {
             </CardHeader>
             <CardContent className="pt-0">
               <div className="space-y-3">
-                {timeline.map((item) => (
-                  <div key={item.id} className="flex gap-3">
-                    <div className={`w-6 h-6 rounded flex items-center justify-center flex-shrink-0 ${
-                      item.type === "success"
-                        ? "bg-success/10 text-success"
-                        : item.type === "warning"
-                        ? "bg-warning/10 text-warning"
-                        : item.type === "error"
-                        ? "bg-destructive/10 text-destructive"
-                        : "bg-primary/10 text-primary"
-                    }`}>
-                      {item.type === "success" ? (
-                        <CheckCircle2 className="w-3.5 h-3.5" />
-                      ) : item.type === "warning" ? (
-                        <AlertTriangle className="w-3.5 h-3.5" />
-                      ) : item.type === "error" ? (
-                        <XCircle className="w-3.5 h-3.5" />
-                      ) : (
-                        <FileText className="w-3.5 h-3.5" />
-                      )}
+                {timeline.map((item) => {
+                  const iconColor = item.type === "success"
+                    ? COLORS.green
+                    : item.type === "warning"
+                    ? COLORS.orange
+                    : item.type === "error"
+                    ? COLORS.red
+                    : COLORS.blue;
+                  
+                  return (
+                    <div key={item.id} className="flex gap-3">
+                      <div 
+                        className="w-6 h-6 rounded flex items-center justify-center flex-shrink-0"
+                        style={{ backgroundColor: `${iconColor}15`, color: iconColor }}
+                      >
+                        {item.type === "success" ? (
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                        ) : item.type === "warning" ? (
+                          <AlertTriangle className="w-3.5 h-3.5" />
+                        ) : item.type === "error" ? (
+                          <XCircle className="w-3.5 h-3.5" />
+                        ) : (
+                          <FileText className="w-3.5 h-3.5" />
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium">{item.title}</p>
+                        <p className="text-xs text-muted-foreground truncate">{item.description}</p>
+                      </div>
+                      <span className="text-xs text-muted-foreground flex-shrink-0">{item.time}</span>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium">{item.title}</p>
-                      <p className="text-xs text-muted-foreground truncate">{item.description}</p>
-                    </div>
-                    <span className="text-xs text-muted-foreground flex-shrink-0">{item.time}</span>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </CardContent>
           </Card>

@@ -24,12 +24,12 @@ function Tabs({
 }
 
 const tabsListVariants = cva(
-  "rounded-md p-1 group-data-[orientation=horizontal]/tabs:h-9 data-[variant=line]:rounded-none group/tabs-list text-muted-foreground inline-flex w-fit items-center justify-center group-data-[orientation=vertical]/tabs:h-fit group-data-[orientation=vertical]/tabs:flex-col",
+  "rounded-md p-1 group-data-[orientation=horizontal]/tabs:h-9 data-[variant=line]:rounded-none group/tabs-list inline-flex w-fit items-center justify-center group-data-[orientation=vertical]/tabs:h-fit group-data-[orientation=vertical]/tabs:flex-col",
   {
     variants: {
       variant: {
-        default: "bg-muted/50",
-        line: "gap-1 bg-transparent",
+        default: "bg-[#F1F5F9] dark:bg-[#334155] text-[#64748B] dark:text-[#94A3B8]",
+        line: "gap-1 bg-transparent text-[#64748B] dark:text-[#94A3B8]",
       },
     },
     defaultVariants: {
@@ -63,8 +63,8 @@ function TabsTrigger({
       data-slot="tabs-trigger"
       className={cn(
         "relative inline-flex h-7 flex-1 items-center justify-center gap-1.5 rounded px-3 text-sm font-medium whitespace-nowrap transition-colors group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:justify-start disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
-        "text-muted-foreground hover:text-foreground",
-        "data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm",
+        "text-[#64748B] dark:text-[#94A3B8] hover:text-[#1E293B] dark:hover:text-[#F8FAFC]",
+        "data-[state=active]:bg-white dark:data-[state=active]:bg-[#1E293B] data-[state=active]:text-[#1E293B] dark:data-[state=active]:text-[#F8FAFC] data-[state=active]:shadow-sm",
         className
       )}
       {...props}

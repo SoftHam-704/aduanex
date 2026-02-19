@@ -49,10 +49,19 @@ const valueData = [
   { month: "Jun", value: 1650000 },
 ];
 
+// Fresh Corporate Palette
+const COLORS = {
+  green: "#10B981",
+  orange: "#FB923C",
+  blue: "#60A5FA",
+  yellow: "#EAB308",
+  red: "#DC2626",
+};
+
 const chartConfig = {
-  importacao: { label: "Importação", color: "#2563EB" },
-  exportacao: { label: "Exportação", color: "#059669" },
-  value: { label: "Valor", color: "#2563EB" },
+  importacao: { label: "Importação", color: COLORS.blue },
+  exportacao: { label: "Exportação", color: COLORS.green },
+  value: { label: "Valor", color: COLORS.green },
 };
 
 const reports = [
@@ -68,8 +77,8 @@ export function Reports() {
 
   const stats = [
     { label: "Processos", value: 127, change: "+12%", color: "text-foreground" },
-    { label: "Valor Total", value: "R$ 8.4M", change: "+18%", color: "text-primary" },
-    { label: "Liberados", value: 48, change: "+8%", color: "text-success" },
+    { label: "Valor Total", value: "R$ 8.4M", change: "+18%", color: `text-[${COLORS.blue}]` },
+    { label: "Liberados", value: 48, change: "+8%", color: `text-[${COLORS.green}]` },
   ];
 
   return (
@@ -104,12 +113,12 @@ export function Reports() {
         </div>
 
         {/* Stats row */}
-        <div className="flex flex-wrap gap-6 py-3 px-4 bg-muted/30 rounded-lg">
+        <div className="flex flex-wrap gap-4 py-2 px-3 bg-muted/30 rounded-md text-xs">
           {stats.map((stat) => (
-            <div key={stat.label} className="flex items-baseline gap-2">
-              <span className={`text-xl font-semibold tabular-nums ${stat.color}`}>{stat.value}</span>
-              <span className="text-xs text-success">{stat.change}</span>
-              <span className="text-xs text-muted-foreground">{stat.label}</span>
+            <div key={stat.label} className="flex items-baseline gap-1.5">
+              <span className={`text-base font-semibold tabular-nums ${stat.color}`}>{stat.value}</span>
+              <span className="text-[#10B981]">{stat.change}</span>
+              <span className="text-muted-foreground">{stat.label}</span>
             </div>
           ))}
         </div>
@@ -138,17 +147,17 @@ export function Reports() {
                     width={30}
                   />
                   <ChartTooltip content={<ChartTooltipContent />} />
-                  <Bar dataKey="importacao" fill="#2563EB" radius={[2, 2, 0, 0]} />
-                  <Bar dataKey="exportacao" fill="#059669" radius={[2, 2, 0, 0]} />
+                  <Bar dataKey="importacao" fill={COLORS.blue} radius={[2, 2, 0, 0]} />
+                  <Bar dataKey="exportacao" fill={COLORS.green} radius={[2, 2, 0, 0]} />
                 </BarChart>
               </ChartContainer>
               <div className="flex justify-center gap-6 mt-2">
                 <div className="flex items-center gap-1.5">
-                  <div className="w-2.5 h-2.5 rounded-sm bg-[#2563EB]" />
+                  <div className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: COLORS.blue }} />
                   <span className="text-xs text-muted-foreground">Importação</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <div className="w-2.5 h-2.5 rounded-sm bg-[#059669]" />
+                  <div className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: COLORS.green }} />
                   <span className="text-xs text-muted-foreground">Exportação</span>
                 </div>
               </div>
@@ -159,7 +168,7 @@ export function Reports() {
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
                 <CardTitle>Valores Movimentados</CardTitle>
-                <div className="flex items-center gap-1 text-success">
+                <div className="flex items-center gap-1" style={{ color: COLORS.green }}>
                   <TrendingUp className="w-3.5 h-3.5" />
                   <span className="text-xs font-medium">+18%</span>
                 </div>
@@ -198,7 +207,7 @@ export function Reports() {
                   <Line
                     type="monotone"
                     dataKey="value"
-                    stroke="#2563EB"
+                    stroke={COLORS.green}
                     strokeWidth={2}
                     dot={false}
                   />
